@@ -117,17 +117,17 @@ import { AuthService } from '../../core/services/auth.service';
 
     </div>
 
-    <!-- Zone de danger -->
-    <div class="card danger-card">
+    <!-- Suppression du compte -->
+    <div class="card delete-card">
       <div class="card-header">
-        <span class="material-icons-round card-icon danger-icon">warning</span>
-        <h2 class="card-title danger-title">Zone de danger</h2>
+        <span class="material-icons-round card-icon">manage_accounts</span>
+        <h2 class="card-title">Supprimer le compte</h2>
       </div>
-      <p class="danger-description">
-        La suppression de votre compte est irréversible. Toutes vos données (revenus, dépenses, abonnements, comptes bancaires) seront définitivement supprimées.
+      <p class="delete-description">
+        Une fois votre compte supprimé, toutes vos données seront définitivement effacées. Cette action est irréversible.
       </p>
-      <button class="btn btn-danger" type="button" (click)="showDeleteModal = true">
-        <span class="material-icons-round">delete_forever</span>
+      <button class="btn btn-delete" type="button" (click)="showDeleteModal = true">
+        <span class="material-icons-round">delete_outline</span>
         Supprimer mon compte
       </button>
     </div>
@@ -156,7 +156,7 @@ import { AuthService } from '../../core/services/auth.service';
           <button class="btn btn-secondary" type="button" (click)="closeDeleteModal()" [disabled]="deleteLoading">
             Annuler
           </button>
-          <button class="btn btn-danger" type="button" (click)="confirmDelete()" [disabled]="deleteLoading || !deletePassword">
+          <button class="btn btn-delete-confirm" type="button" (click)="confirmDelete()" [disabled]="deleteLoading || !deletePassword">
             <span class="material-icons-round" *ngIf="!deleteLoading">delete_forever</span>
             <span class="material-icons-round spin" *ngIf="deleteLoading">sync</span>
             {{ deleteLoading ? 'Suppression...' : 'Confirmer la suppression' }}
@@ -333,19 +333,34 @@ import { AuthService } from '../../core/services/auth.service';
       &:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
     }
 
-    .danger-card {
-      border-color: rgba(239, 68, 68, 0.3);
+    .delete-card {
       grid-column: 1 / -1;
     }
 
-    .danger-icon { color: var(--danger) !important; }
-    .danger-title { color: var(--danger) !important; }
-
-    .danger-description {
+    .delete-description {
       color: var(--text-secondary);
       font-size: 0.9rem;
       margin: 0 0 20px 0;
       line-height: 1.5;
+    }
+
+    .btn-delete {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      width: auto;
+      &:hover:not(:disabled) {
+        color: var(--danger);
+        border-color: rgba(239, 68, 68, 0.4);
+        background: rgba(239, 68, 68, 0.05);
+      }
+    }
+
+    .btn-delete-confirm {
+      background: var(--danger);
+      color: white;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+      &:hover:not(:disabled) { opacity: 0.9; }
     }
 
     .modal-overlay {
