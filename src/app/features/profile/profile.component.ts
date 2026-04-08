@@ -116,6 +116,54 @@ import { AuthService } from '../../core/services/auth.service';
       </div>
 
     </div>
+
+    <!-- Zone de danger -->
+    <div class="card danger-card">
+      <div class="card-header">
+        <span class="material-icons-round card-icon danger-icon">warning</span>
+        <h2 class="card-title danger-title">Zone de danger</h2>
+      </div>
+      <p class="danger-description">
+        La suppression de votre compte est irréversible. Toutes vos données (revenus, dépenses, abonnements, comptes bancaires) seront définitivement supprimées.
+      </p>
+      <button class="btn btn-danger" type="button" (click)="showDeleteModal = true">
+        <span class="material-icons-round">delete_forever</span>
+        Supprimer mon compte
+      </button>
+    </div>
+
+    <!-- Modal confirmation suppression -->
+    <div class="modal-overlay" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <span class="material-icons-round modal-icon">delete_forever</span>
+          <h3 class="modal-title">Supprimer le compte</h3>
+        </div>
+        <p class="modal-description">Pour confirmer, saisissez votre mot de passe.</p>
+
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <input class="form-input" type="password" [(ngModel)]="deletePassword"
+                 placeholder="Votre mot de passe actuel" />
+        </div>
+
+        <div *ngIf="deleteError" class="alert alert-error">
+          <span class="material-icons-round">error</span>
+          {{ deleteError }}
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-secondary" type="button" (click)="closeDeleteModal()" [disabled]="deleteLoading">
+            Annuler
+          </button>
+          <button class="btn btn-danger" type="button" (click)="confirmDelete()" [disabled]="deleteLoading || !deletePassword">
+            <span class="material-icons-round" *ngIf="!deleteLoading">delete_forever</span>
+            <span class="material-icons-round spin" *ngIf="deleteLoading">sync</span>
+            {{ deleteLoading ? 'Suppression...' : 'Confirmer la suppression' }}
+          </button>
+        </div>
+      </div>
+    </div>
   `,
   styles: [`
     .page-header {
@@ -271,6 +319,88 @@ import { AuthService } from '../../core/services/auth.service';
       &:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
     }
 
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      &:hover:not(:disabled) { background: var(--border); }
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+      &:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+    }
+
+    .danger-card {
+      border-color: rgba(239, 68, 68, 0.3);
+      grid-column: 1 / -1;
+    }
+
+    .danger-icon { color: var(--danger) !important; }
+    .danger-title { color: var(--danger) !important; }
+
+    .danger-description {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin: 0 0 20px 0;
+      line-height: 1.5;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .modal-icon {
+      color: var(--danger);
+      font-size: 26px;
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .modal-description {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin: 0 0 20px 0;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+
+      .btn { width: auto; flex: 1; }
+    }
+
     .spin {
       animation: spin 1s linear infinite;
     }
@@ -294,6 +424,11 @@ export class ProfileComponent implements OnInit {
   passwordLoading = false;
   passwordSuccess = false;
   passwordError = '';
+
+  showDeleteModal = false;
+  deletePassword = '';
+  deleteLoading = false;
+  deleteError = '';
 
   constructor(private api: ApiService, private authService: AuthService) {}
 
@@ -348,6 +483,27 @@ export class ProfileComponent implements OnInit {
       error: (err) => {
         this.passwordLoading = false;
         this.passwordError = err.error?.error || 'Erreur lors du changement de mot de passe';
+      }
+    });
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+    this.deletePassword = '';
+    this.deleteError = '';
+  }
+
+  confirmDelete() {
+    this.deleteLoading = true;
+    this.deleteError = '';
+
+    this.api.deleteAccount(this.deletePassword).subscribe({
+      next: () => {
+        this.authService.logout();
+      },
+      error: (err) => {
+        this.deleteLoading = false;
+        this.deleteError = err.error?.error || 'Erreur lors de la suppression';
       }
     });
   }

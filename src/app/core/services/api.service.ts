@@ -114,4 +114,8 @@ export class ApiService {
   changePassword(data: PasswordChangeRequest) {
     return this.http.put<any>(`${this.BASE}/users/password`, data);
   }
+
+  deleteAccount(password: string) {
+    return this.http.delete<any>(`${this.BASE}/users/account`, { body: { password } });
+  }
 }
