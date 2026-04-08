@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
@@ -14,7 +14,7 @@ interface NavItem {
   standalone: true,
   imports: [RouterLink, RouterLinkActive, CommonModule],
   template: `
-    <aside class="sidebar" [class.collapsed]="collapsed">
+    <aside class="sidebar" [class.collapsed]="collapsed" [class.open]="open">
       <div class="sidebar-logo">
         <div class="logo-icon">
           <span class="material-icons-round">account_balance_wallet</span>
@@ -27,7 +27,8 @@ interface NavItem {
            [routerLink]="item.route"
            routerLinkActive="active"
            class="nav-item"
-           [attr.data-tooltip]="collapsed ? item.label : null">
+           [attr.data-tooltip]="collapsed ? item.label : null"
+           (click)="closeSidebar.emit()">
           <span class="material-icons-round nav-icon">{{ item.icon }}</span>
           <span class="nav-label" *ngIf="!collapsed">{{ item.label }}</span>
         </a>
@@ -190,11 +191,27 @@ interface NavItem {
         border-color: var(--primary);
       }
     }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+        box-shadow: none;
+
+        &.open {
+          transform: translateX(0);
+          box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+        }
+      }
+
+      .collapse-btn { display: none; }
+    }
   `]
 })
 export class SidebarComponent {
   @Input() collapsed = false;
+  @Input() open = false;
   @Output() toggle = new EventEmitter<void>();
+  @Output() closeSidebar = new EventEmitter<void>();
 
   navItems: NavItem[] = [
     { label: 'Tableau de bord', icon: 'dashboard', route: '/dashboard' },
