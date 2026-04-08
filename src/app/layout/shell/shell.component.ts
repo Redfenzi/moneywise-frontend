@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
         (toggle)="sidebarCollapsed.set(!sidebarCollapsed())"
         (closeSidebar)="sidebarOpen.set(false)" />
       <div class="main-content" [class.collapsed]="sidebarCollapsed()">
-        <app-header (toggleSidebar)="sidebarOpen.update(v => !v)" />
+        <app-header (toggleSidebar)="toggleMobileSidebar()" />
         <div class="page-container">
           <router-outlet />
         </div>
@@ -40,4 +40,8 @@ import { CommonModule } from '@angular/common';
 export class ShellComponent {
   sidebarCollapsed = signal(false);
   sidebarOpen = signal(false);
+
+  toggleMobileSidebar() {
+    this.sidebarOpen.set(!this.sidebarOpen());
+  }
 }
