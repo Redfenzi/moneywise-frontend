@@ -16,7 +16,7 @@ import { RouterLink } from '@angular/router';
       <div class="header-right">
         <div class="date-display">
           <span class="material-icons-round">calendar_today</span>
-          <span>{{ today | date:'MMMM yyyy' : '' : 'fr' }}</span>
+          <span>{{ today | date:'EEEE d MMMM yyyy' : '' : 'fr' }}</span>
         </div>
 
         <div class="user-avatar" [attr.data-tooltip]="userName">
