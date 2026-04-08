@@ -219,6 +219,7 @@ export class SidebarComponent {
     { label: 'Dépenses', icon: 'shopping_cart', route: '/expenses' },
     { label: 'Abonnements', icon: 'subscriptions', route: '/subscriptions' },
     { label: 'Comptes bancaires', icon: 'account_balance', route: '/bank-accounts' },
+    { label: 'Mon profil', icon: 'manage_accounts', route: '/profile' },
   ];
 
   constructor(public auth: AuthService) {}

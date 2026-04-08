@@ -40,6 +40,10 @@ export const routes: Routes = [
       {
         path: 'bank-accounts',
         loadComponent: () => import('./features/bank-accounts/bank-accounts.component').then(m => m.BankAccountsComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent)
       }
     ]
   },

@@ -30,6 +30,17 @@ export interface RegisterRequest {
   userType: string;
 }
 
+export interface ProfileUpdateRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface PasswordChangeRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
 export interface Income {
   id?: number;
   amount: number;

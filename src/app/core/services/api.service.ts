@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Income, Expense, Subscription, BankAccount, MonthlySummary } from '../models/models';
+import { Income, Expense, Subscription, BankAccount, MonthlySummary, ProfileUpdateRequest, PasswordChangeRequest } from '../models/models';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -100,5 +100,18 @@ export class ApiService {
 
   deleteBankAccount(id: number) {
     return this.http.delete<void>(`${this.BASE}/bank-accounts/${id}`);
+  }
+
+  // === USER PROFILE ===
+  getProfile() {
+    return this.http.get<any>(`${this.BASE}/users/profile`);
+  }
+
+  updateProfile(data: ProfileUpdateRequest) {
+    return this.http.put<any>(`${this.BASE}/users/profile`, data);
+  }
+
+  changePassword(data: PasswordChangeRequest) {
+    return this.http.put<any>(`${this.BASE}/users/password`, data);
   }
 }
