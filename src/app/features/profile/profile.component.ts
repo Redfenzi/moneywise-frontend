@@ -206,6 +206,7 @@ import { AuthService } from '../../core/services/auth.service';
     .card-header {
       display: flex;
       align-items: center;
+      justify-content: flex-start;
       gap: 12px;
       margin-bottom: 24px;
       padding-bottom: 16px;
