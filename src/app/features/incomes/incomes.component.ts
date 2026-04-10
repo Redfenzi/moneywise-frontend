@@ -1,13 +1,15 @@
 import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
-import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { AuthService } from '../../core/services/auth.service';
+import { AppCurrencyPipe } from '../../core/pipes/app-currency.pipe';
 import { Income, IncomeType } from '../../core/models/models';
 
 @Component({
   selector: 'app-incomes',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, ReactiveFormsModule],
+  imports: [CommonModule, AppCurrencyPipe, DatePipe, ReactiveFormsModule],
   template: `
     <div>
       <div class="page-header">
@@ -43,7 +45,7 @@ import { Income, IncomeType } from '../../core/models/models';
             <span class="badge badge-primary" style="margin-left: 4px;">{{ filteredIncomes().length }}</span>
           </div>
           <div class="total-badge">
-            Total: <strong class="amount positive">{{ totalFiltered() | currency:'EUR':'symbol':'1.2-2':'fr' }}</strong>
+            Total: <strong class="amount positive">{{ totalFiltered() | appCurrency }}</strong>
           </div>
         </div>
 
@@ -85,7 +87,7 @@ import { Income, IncomeType } from '../../core/models/models';
                   </div>
                 </td>
                 <td><span class="badge badge-primary">{{ getTypeLabel(income.type) }}</span></td>
-                <td><span class="amount positive">+{{ income.amount | currency:'EUR':'symbol':'1.2-2':'fr' }}</span></td>
+                <td><span class="amount positive">+{{ income.amount | appCurrency }}</span></td>
                 <td>{{ income.incomeDate | date:'dd/MM/yyyy' }}</td>
                 <td>
                   <span class="badge" [class.badge-success]="income.isFixedSalary" [class.badge-info]="!income.isFixedSalary">
@@ -133,7 +135,7 @@ import { Income, IncomeType } from '../../core/models/models';
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label">Montant (€)</label>
+                <label class="form-label">Montant ({{ currencyCode }})</label>
                 <div class="input-with-icon">
                   <span class="material-icons-round input-icon">euro</span>
                   <input type="number" class="form-control" formControlName="amount"
@@ -253,7 +255,7 @@ export class IncomesComponent implements OnInit {
     { value: 'OTHER', label: 'Autre', icon: 'more_horiz' },
   ];
 
-  constructor(private api: ApiService, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+  constructor(private api: ApiService, private fb: FormBuilder, private cdr: ChangeDetectorRef, private authService: AuthService) {
     this.form = this.fb.group({
       type: ['SALARY', Validators.required],
       amount: [null, [Validators.required, Validators.min(0.01)]],
@@ -261,6 +263,10 @@ export class IncomesComponent implements OnInit {
       incomeDate: [new Date().toISOString().split('T')[0], Validators.required],
       isFixedSalary: [false]
     });
+  }
+
+  get currencyCode(): string {
+    return this.authService.currentUser()?.currency || 'EUR';
   }
 
   ngOnInit() {

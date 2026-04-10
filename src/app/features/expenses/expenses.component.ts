@@ -1,13 +1,15 @@
 import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
-import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { AuthService } from '../../core/services/auth.service';
+import { AppCurrencyPipe } from '../../core/pipes/app-currency.pipe';
 import { Expense, ExpenseCategory } from '../../core/models/models';
 
 @Component({
   selector: 'app-expenses',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, ReactiveFormsModule],
+  imports: [CommonModule, AppCurrencyPipe, DatePipe, ReactiveFormsModule],
   template: `
     <div>
       <div class="page-header">
@@ -42,7 +44,7 @@ import { Expense, ExpenseCategory } from '../../core/models/models';
             <span class="badge badge-danger" style="margin-left: 4px;">{{ filteredExpenses().length }}</span>
           </div>
           <div class="total-badge">
-            Total: <strong class="amount negative">{{ totalFiltered() | currency:'EUR':'symbol':'1.2-2':'fr' }}</strong>
+            Total: <strong class="amount negative">{{ totalFiltered() | appCurrency }}</strong>
           </div>
         </div>
 
@@ -83,7 +85,7 @@ import { Expense, ExpenseCategory } from '../../core/models/models';
                   </div>
                 </td>
                 <td><span class="category-pill">{{ getCategoryLabel(expense.category) }}</span></td>
-                <td><span class="amount negative">-{{ expense.amount | currency:'EUR':'symbol':'1.2-2':'fr' }}</span></td>
+                <td><span class="amount negative">-{{ expense.amount | appCurrency }}</span></td>
                 <td>{{ expense.expenseDate | date:'dd/MM/yyyy' }}</td>
                 <td>
                   <div class="flex flex-gap">
@@ -126,7 +128,7 @@ import { Expense, ExpenseCategory } from '../../core/models/models';
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label">Montant (€)</label>
+                <label class="form-label">Montant ({{ currencyCode }})</label>
                 <div class="input-with-icon">
                   <span class="material-icons-round input-icon">euro</span>
                   <input type="number" class="form-control" formControlName="amount"
@@ -207,13 +209,17 @@ export class ExpensesComponent implements OnInit {
     { value: 'OTHER', label: 'Autre', icon: 'more_horiz' },
   ];
 
-  constructor(private api: ApiService, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+  constructor(private api: ApiService, private fb: FormBuilder, private cdr: ChangeDetectorRef, private authService: AuthService) {
     this.form = this.fb.group({
       category: ['FOOD', Validators.required],
       amount: [null, [Validators.required, Validators.min(0.01)]],
       description: ['', Validators.required],
       expenseDate: [new Date().toISOString().split('T')[0], Validators.required]
     });
+  }
+
+  get currencyCode(): string {
+    return this.authService.currentUser()?.currency || 'EUR';
   }
 
   ngOnInit() { this.loadExpenses(); }

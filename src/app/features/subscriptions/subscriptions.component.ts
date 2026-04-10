@@ -1,13 +1,15 @@
 import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
-import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { AuthService } from '../../core/services/auth.service';
+import { AppCurrencyPipe } from '../../core/pipes/app-currency.pipe';
 import { Subscription, SubscriptionCategory } from '../../core/models/models';
 
 @Component({
   selector: 'app-subscriptions',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, ReactiveFormsModule],
+  imports: [CommonModule, AppCurrencyPipe, DatePipe, ReactiveFormsModule],
   template: `
     <div>
       <div class="page-header">
@@ -36,14 +38,14 @@ import { Subscription, SubscriptionCategory } from '../../core/models/models';
           <div class="stat-icon" style="background: rgba(108,99,255,0.1);">
             <span class="material-icons-round" style="color: var(--primary-light); font-size:24px;">euro</span>
           </div>
-          <div class="stat-value">{{ totalMonthly() | currency:'EUR':'symbol':'1.2-2':'fr' }}</div>
+          <div class="stat-value">{{ totalMonthly() | appCurrency }}</div>
           <div class="stat-label">Par mois (actifs)</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon" style="background: rgba(0,212,170,0.1);">
             <span class="material-icons-round" style="color: var(--secondary); font-size:24px;">calendar_month</span>
           </div>
-          <div class="stat-value">{{ totalYearly() | currency:'EUR':'symbol':'1.2-2':'fr' }}</div>
+          <div class="stat-value">{{ totalYearly() | appCurrency }}</div>
           <div class="stat-label">Par an (projection)</div>
         </div>
       </div>
@@ -97,7 +99,7 @@ import { Subscription, SubscriptionCategory } from '../../core/models/models';
             </div>
 
             <div class="sub-amount">
-              <span class="amount warning-color">{{ sub.monthlyAmount | currency:'EUR':'symbol':'1.2-2':'fr' }}</span>
+              <span class="amount warning-color">{{ sub.monthlyAmount | appCurrency }}</span>
               <span style="color: var(--text-muted); font-size:0.8rem;">/mois</span>
             </div>
 
@@ -161,7 +163,7 @@ import { Subscription, SubscriptionCategory } from '../../core/models/models';
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label">Montant mensuel (€)</label>
+                <label class="form-label">Montant mensuel ({{ currencyCode }})</label>
                 <div class="input-with-icon">
                   <span class="material-icons-round input-icon">euro</span>
                   <input type="number" class="form-control" formControlName="monthlyAmount"
@@ -258,7 +260,7 @@ export class SubscriptionsComponent implements OnInit {
     { value: 'OTHER', label: '📦 Autre', icon: 'more_horiz' },
   ];
 
-  constructor(private api: ApiService, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+  constructor(private api: ApiService, private fb: FormBuilder, private cdr: ChangeDetectorRef, private authService: AuthService) {
     this.form = this.fb.group({
       name: ['', Validators.required],
       category: ['STREAMING', Validators.required],
@@ -266,6 +268,10 @@ export class SubscriptionsComponent implements OnInit {
       startDate: [new Date().toISOString().split('T')[0], Validators.required],
       durationMonths: [null]
     });
+  }
+
+  get currencyCode(): string {
+    return this.authService.currentUser()?.currency || 'EUR';
   }
 
   ngOnInit() { this.loadSubscriptions(); }

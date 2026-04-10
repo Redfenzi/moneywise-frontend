@@ -1,13 +1,15 @@
 import { Component, OnInit, signal, computed, ChangeDetectorRef } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { AuthService } from '../../core/services/auth.service';
+import { AppCurrencyPipe } from '../../core/pipes/app-currency.pipe';
 import { BankAccount, AccountType } from '../../core/models/models';
 
 @Component({
   selector: 'app-bank-accounts',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, ReactiveFormsModule],
+  imports: [CommonModule, AppCurrencyPipe, ReactiveFormsModule],
   template: `
     <div>
       <div class="page-header">
@@ -29,7 +31,7 @@ import { BankAccount, AccountType } from '../../core/models/models';
           <div class="stat-icon" style="background: rgba(0,212,170,0.1);">
             <span class="material-icons-round" style="color: var(--secondary); font-size:24px;">account_balance_wallet</span>
           </div>
-          <div class="stat-value" style="color: var(--secondary);">{{ totalBalance() | currency:'EUR':'symbol':'1.2-2':'fr' }}</div>
+          <div class="stat-value" style="color: var(--secondary);">{{ totalBalance() | appCurrency }}</div>
           <div class="stat-label">Épargne totale</div>
         </div>
         <div class="stat-card">
@@ -43,7 +45,7 @@ import { BankAccount, AccountType } from '../../core/models/models';
           <div class="stat-icon" style="background: rgba(245,158,11,0.1);">
             <span class="material-icons-round" style="color: #F59E0B; font-size:24px;">star</span>
           </div>
-          <div class="stat-value">{{ primaryAccount()!.balance | currency:'EUR':'symbol':'1.2-2':'fr' }}</div>
+          <div class="stat-value">{{ primaryAccount()!.balance | appCurrency }}</div>
           <div class="stat-label">Compte principal</div>
         </div>
       </div>
@@ -80,7 +82,7 @@ import { BankAccount, AccountType } from '../../core/models/models';
           <div class="account-name">{{ acc.accountName }}</div>
 
           <div class="account-balance">
-            {{ acc.balance | currency:'EUR':'symbol':'1.2-2':'fr' }}
+            {{ acc.balance | appCurrency }}
           </div>
 
           <div class="account-bar">
@@ -136,7 +138,7 @@ import { BankAccount, AccountType } from '../../core/models/models';
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label">Solde (€)</label>
+                <label class="form-label">Solde ({{ currencyCode }})</label>
                 <div class="input-with-icon">
                   <span class="material-icons-round input-icon">euro</span>
                   <input type="number" class="form-control" formControlName="balance"
@@ -211,7 +213,7 @@ export class BankAccountsComponent implements OnInit {
     { value: 'OTHER',      label: '🏦 Autre',            icon: 'account_balance', color: '#6B7280' },
   ];
 
-  constructor(private api: ApiService, private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+  constructor(private api: ApiService, private fb: FormBuilder, private cdr: ChangeDetectorRef, private authService: AuthService) {
     this.form = this.fb.group({
       bankName:    ['', Validators.required],
       accountName: ['', Validators.required],
@@ -219,6 +221,10 @@ export class BankAccountsComponent implements OnInit {
       balance:     [0, [Validators.required, Validators.min(0)]],
       isPrimary:   [false]
     });
+  }
+
+  get currencyCode(): string {
+    return this.authService.currentUser()?.currency || 'EUR';
   }
 
   ngOnInit() { this.loadAccounts(); }

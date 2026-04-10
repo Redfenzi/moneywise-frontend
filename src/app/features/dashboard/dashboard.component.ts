@@ -1,14 +1,15 @@
 import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
-import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { AppCurrencyPipe } from '../../core/pipes/app-currency.pipe';
 import { MonthlySummary } from '../../core/models/models';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, RouterLink],
+  imports: [CommonModule, AppCurrencyPipe, DatePipe, RouterLink],
   template: `
     <div class="dashboard">
       <!-- PAGE HEADER -->
@@ -49,7 +50,7 @@ import { RouterLink } from '@angular/router';
             <div class="stat-icon income-icon">
               <span class="material-icons-round">trending_up</span>
             </div>
-            <div class="stat-value">{{ summary()!.totalIncome | currency:'EUR':'symbol':'1.2-2':'fr' }}</div>
+            <div class="stat-value">{{ summary()!.totalIncome | appCurrency }}</div>
             <div class="stat-label">Revenus du mois</div>
           </div>
 
@@ -57,7 +58,7 @@ import { RouterLink } from '@angular/router';
             <div class="stat-icon expense-icon">
               <span class="material-icons-round">shopping_cart</span>
             </div>
-            <div class="stat-value">{{ summary()!.totalExpenses | currency:'EUR':'symbol':'1.2-2':'fr' }}</div>
+            <div class="stat-value">{{ summary()!.totalExpenses | appCurrency }}</div>
             <div class="stat-label">Achats & Dépenses</div>
           </div>
 
@@ -65,7 +66,7 @@ import { RouterLink } from '@angular/router';
             <div class="stat-icon subscription-icon">
               <span class="material-icons-round">subscriptions</span>
             </div>
-            <div class="stat-value">{{ summary()!.totalSubscriptions | currency:'EUR':'symbol':'1.2-2':'fr' }}</div>
+            <div class="stat-value">{{ summary()!.totalSubscriptions | appCurrency }}</div>
             <div class="stat-label">Abonnements actifs</div>
           </div>
 
@@ -74,7 +75,7 @@ import { RouterLink } from '@angular/router';
               <span class="material-icons-round">{{ summary()!.balance >= 0 ? 'savings' : 'warning' }}</span>
             </div>
             <div class="stat-value" [style.color]="summary()!.balance >= 0 ? 'var(--success)' : 'var(--danger)'">
-              {{ summary()!.balance | currency:'EUR':'symbol':'1.2-2':'fr' }}
+              {{ summary()!.balance | appCurrency }}
             </div>
             <div class="stat-label">Solde restant</div>
           </div>
@@ -97,7 +98,7 @@ import { RouterLink } from '@angular/router';
                   <span class="budget-label">
                     <span class="budget-dot income"></span>Revenus
                   </span>
-                  <span class="amount positive">{{ summary()!.totalIncome | currency:'EUR':'symbol':'1.2-2':'fr' }}</span>
+                  <span class="amount positive">{{ summary()!.totalIncome | appCurrency }}</span>
                 </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar income" [style.width.%]="100"></div>
@@ -109,7 +110,7 @@ import { RouterLink } from '@angular/router';
                   <span class="budget-label">
                     <span class="budget-dot expense"></span>Achats
                   </span>
-                  <span class="amount negative">{{ summary()!.totalExpenses | currency:'EUR':'symbol':'1.2-2':'fr' }}</span>
+                  <span class="amount negative">{{ summary()!.totalExpenses | appCurrency }}</span>
                 </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar expense"
@@ -122,7 +123,7 @@ import { RouterLink } from '@angular/router';
                   <span class="budget-label">
                     <span class="budget-dot subscription"></span>Abonnements
                   </span>
-                  <span class="amount warning-color">{{ summary()!.totalSubscriptions | currency:'EUR':'symbol':'1.2-2':'fr' }}</span>
+                  <span class="amount warning-color">{{ summary()!.totalSubscriptions | appCurrency }}</span>
                 </div>
                 <div class="progress-bar-container">
                   <div class="progress-bar subscription"
@@ -135,13 +136,13 @@ import { RouterLink } from '@angular/router';
               <div class="budget-total">
                 <span>Total déductions</span>
                 <span class="amount negative">
-                  -{{ summary()!.totalDeductions | currency:'EUR':'symbol':'1.2-2':'fr' }}
+                  -{{ summary()!.totalDeductions | appCurrency }}
                 </span>
               </div>
               <div class="budget-total balance">
                 <span>Solde net</span>
                 <span class="amount" [class.positive]="summary()!.balance >= 0" [class.negative]="summary()!.balance < 0">
-                  {{ summary()!.balance | currency:'EUR':'symbol':'1.2-2':'fr' }}
+                  {{ summary()!.balance | appCurrency }}
                 </span>
               </div>
             </div>
@@ -160,13 +161,13 @@ import { RouterLink } from '@angular/router';
             </div>
 
             <div class="savings-total">
-              <div class="savings-amount">{{ summary()!.totalSavings | currency:'EUR':'symbol':'1.2-2':'fr' }}</div>
+              <div class="savings-amount">{{ summary()!.totalSavings | appCurrency }}</div>
               <div class="savings-label">Tous comptes confondus</div>
             </div>
 
             <div class="savings-hint" *ngIf="summary()!.balance > 0">
               <span class="material-icons-round" style="color: var(--success); font-size: 18px;">lightbulb</span>
-              <span>Vous avez <strong>{{ summary()!.balance | currency:'EUR':'symbol':'1.2-2':'fr' }}</strong> disponible ce mois-ci</span>
+              <span>Vous avez <strong>{{ summary()!.balance | appCurrency }}</strong> disponible ce mois-ci</span>
             </div>
             <div class="savings-hint danger" *ngIf="summary()!.balance < 0">
               <span class="material-icons-round" style="color: var(--danger); font-size: 18px;">warning</span>
@@ -193,7 +194,7 @@ import { RouterLink } from '@angular/router';
                 </span>
                 <div>
                   <div class="category-name">{{ getCategoryLabel(cat[0]) }}</div>
-                  <div class="category-amount">{{ cat[1] | currency:'EUR':'symbol':'1.2-2':'fr' }}</div>
+                  <div class="category-amount">{{ cat[1] | appCurrency }}</div>
                 </div>
               </div>
               <div class="progress-bar-container" style="margin-top: 8px;">
