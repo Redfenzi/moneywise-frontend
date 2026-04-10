@@ -1,26 +1,27 @@
-import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { AppCurrencyPipe } from '../../core/pipes/app-currency.pipe';
 import { Subscription, SubscriptionCategory } from '../../core/models/models';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-subscriptions',
   standalone: true,
-  imports: [CommonModule, AppCurrencyPipe, DatePipe, ReactiveFormsModule],
+  imports: [CommonModule, AppCurrencyPipe, DatePipe, ReactiveFormsModule, TranslateModule],
   template: `
     <div>
       <div class="page-header">
         <div class="flex flex-between flex-wrap" style="gap: 16px;">
           <div>
-            <h1 class="page-title">Abonnements</h1>
-            <p class="page-subtitle">Gérez vos abonnements récurrents et leur déduction mensuelle automatique</p>
+            <h1 class="page-title">{{ 'subscriptions.title' | translate }}</h1>
+            <p class="page-subtitle">{{ 'subscriptions.subtitle' | translate }}</p>
           </div>
           <button class="btn btn-primary" (click)="openModal()">
             <span class="material-icons-round">add</span>
-            Nouvel abonnement
+            {{ 'subscriptions.add_btn' | translate }}
           </button>
         </div>
       </div>
@@ -32,21 +33,21 @@ import { Subscription, SubscriptionCategory } from '../../core/models/models';
             <span class="material-icons-round">subscriptions</span>
           </div>
           <div class="stat-value">{{ activeSubscriptions().length }}</div>
-          <div class="stat-label">Abonnements actifs</div>
+          <div class="stat-label">{{ 'subscriptions.active_count' | translate }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon" style="background: rgba(108,99,255,0.1);">
             <span class="material-icons-round" style="color: var(--primary-light); font-size:24px;">euro</span>
           </div>
           <div class="stat-value">{{ totalMonthly() | appCurrency }}</div>
-          <div class="stat-label">Par mois (actifs)</div>
+          <div class="stat-label">{{ 'subscriptions.monthly' | translate }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon" style="background: rgba(0,212,170,0.1);">
             <span class="material-icons-round" style="color: var(--secondary); font-size:24px;">calendar_month</span>
           </div>
           <div class="stat-value">{{ totalYearly() | appCurrency }}</div>
-          <div class="stat-label">Par an (projection)</div>
+          <div class="stat-label">{{ 'subscriptions.yearly' | translate }}</div>
         </div>
       </div>
 
@@ -60,10 +61,10 @@ import { Subscription, SubscriptionCategory } from '../../core/models/models';
           <div class="flex flex-gap">
             <button class="btn btn-secondary btn-sm"
                     [class.btn-primary]="activeFilter() === 'ACTIVE'"
-                    (click)="activeFilter.set('ACTIVE')">Actifs</button>
+                    (click)="activeFilter.set('ACTIVE')">{{ 'subscriptions.filter_active' | translate }}</button>
             <button class="btn btn-secondary btn-sm"
                     [class.btn-primary]="activeFilter() === 'ALL'"
-                    (click)="activeFilter.set('ALL')">Tous</button>
+                    (click)="activeFilter.set('ALL')">{{ 'subscriptions.filter_all' | translate }}</button>
           </div>
         </div>
 
@@ -73,10 +74,10 @@ import { Subscription, SubscriptionCategory } from '../../core/models/models';
 
         <div *ngIf="!loading() && filteredSubscriptions().length === 0" class="empty-state">
           <div class="empty-icon"><span class="material-icons-round">subscriptions</span></div>
-          <h3>Aucun abonnement</h3>
-          <p>Ajoutez vos abonnements pour les déduire automatiquement de votre budget</p>
+          <h3>{{ 'subscriptions.empty_title' | translate }}</h3>
+          <p>{{ 'subscriptions.empty_subtitle' | translate }}</p>
           <button class="btn btn-primary" (click)="openModal()">
-            <span class="material-icons-round">add</span>Ajouter un abonnement
+            <span class="material-icons-round">add</span>{{ 'subscriptions.add_btn' | translate }}
           </button>
         </div>
 
@@ -91,30 +92,30 @@ import { Subscription, SubscriptionCategory } from '../../core/models/models';
               </div>
               <div class="sub-info">
                 <div class="sub-name">{{ sub.name }}</div>
-                <div class="sub-category">{{ getCategoryLabel(sub.category) }}</div>
+                <div class="sub-category">{{ getCategoryLabel(sub.category) | translate }}</div>
               </div>
               <span class="badge" [class.badge-success]="sub.isActive" [class.badge-danger]="!sub.isActive">
-                {{ sub.isActive ? 'Actif' : 'Inactif' }}
+              {{ sub.isActive ? ('subscriptions.active_badge' | translate) : ('subscriptions.inactive_badge' | translate) }}
               </span>
             </div>
 
             <div class="sub-amount">
               <span class="amount warning-color">{{ sub.monthlyAmount | appCurrency }}</span>
-              <span style="color: var(--text-muted); font-size:0.8rem;">/mois</span>
+              <span>{{ 'subscriptions.per_month' | translate }}</span>
             </div>
 
             <div class="sub-dates">
               <div class="sub-date-item">
                 <span class="material-icons-round">play_circle</span>
-                <span>Début: {{ sub.startDate | date:'dd/MM/yyyy' }}</span>
+                <span>{{ 'subscriptions.start' | translate }}: {{ sub.startDate | date:'dd/MM/yyyy' }}</span>
               </div>
               <div class="sub-date-item" *ngIf="sub.endDate">
                 <span class="material-icons-round">stop_circle</span>
-                <span>Fin: {{ sub.endDate | date:'dd/MM/yyyy' }}</span>
+                <span>{{ 'subscriptions.end' | translate }}: {{ sub.endDate | date:'dd/MM/yyyy' }}</span>
               </div>
               <div class="sub-date-item" *ngIf="sub.durationMonths">
                 <span class="material-icons-round">timelapse</span>
-                <span>{{ sub.durationMonths }} mois</span>
+                <span>{{ sub.durationMonths }} {{ 'subscriptions.months' | translate }}</span>
               </div>
             </div>
 
@@ -122,7 +123,7 @@ import { Subscription, SubscriptionCategory } from '../../core/models/models';
               <button class="btn btn-sm" [class.btn-success]="!sub.isActive" [class.btn-secondary]="sub.isActive"
                       (click)="toggleSub(sub)">
                 <span class="material-icons-round">{{ sub.isActive ? 'pause' : 'play_arrow' }}</span>
-                {{ sub.isActive ? 'Désactiver' : 'Activer' }}
+                {{ sub.isActive ? ('subscriptions.deactivate' | translate) : ('subscriptions.activate' | translate) }}
               </button>
               <button class="btn btn-icon" style="color: var(--primary-light);" (click)="editSub(sub)">
                 <span class="material-icons-round">edit</span>
@@ -142,7 +143,7 @@ import { Subscription, SubscriptionCategory } from '../../core/models/models';
         <div class="modal-header">
           <div class="modal-title">
             <span class="material-icons-round">{{ editingId() ? 'edit' : 'add_card' }}</span>
-            {{ editingId() ? "Modifier l'abonnement" : 'Nouvel abonnement' }}
+            {{ editingId() ? ('subscriptions.modal_edit' | translate) : ('subscriptions.modal_new' | translate) }}
           </div>
           <button class="btn btn-icon" (click)="showModal.set(false)">
             <span class="material-icons-round">close</span>
@@ -151,19 +152,19 @@ import { Subscription, SubscriptionCategory } from '../../core/models/models';
         <div class="modal-body">
           <form [formGroup]="form">
             <div class="form-group">
-              <label class="form-label">Nom de l'abonnement</label>
+              <label class="form-label">{{ 'subscriptions.field_name' | translate }}</label>
               <input type="text" class="form-control" formControlName="name"
-                     placeholder="Ex: Netflix, EDF, Orange...">
+                     [placeholder]="'subscriptions.field_name_placeholder' | translate">
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Catégorie</label>
+                <label class="form-label">{{ 'subscriptions.field_category' | translate }}</label>
                 <select class="form-control" formControlName="category">
-                  <option *ngFor="let c of subCategories" [value]="c.value">{{ c.label }}</option>
+                  <option *ngFor="let c of subCategories" [value]="c.value">{{ c.label | translate }}</option>
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label">Montant mensuel ({{ currencyCode }})</label>
+                <label class="form-label">{{ 'subscriptions.field_amount' | translate }} ({{ currencyCode }})</label>
                 <div class="input-with-icon">
                   <span class="material-icons-round input-icon">euro</span>
                   <input type="number" class="form-control" formControlName="monthlyAmount"
@@ -173,26 +174,26 @@ import { Subscription, SubscriptionCategory } from '../../core/models/models';
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Date de début</label>
+                <label class="form-label">{{ 'subscriptions.field_start_date' | translate }}</label>
                 <input type="date" class="form-control" formControlName="startDate">
               </div>
               <div class="form-group">
-                <label class="form-label">Durée (mois, optionnel)</label>
+                <label class="form-label">{{ 'subscriptions.field_duration' | translate }}</label>
                 <div class="input-with-icon">
                   <span class="material-icons-round input-icon">timelapse</span>
                   <input type="number" class="form-control" formControlName="durationMonths"
-                         placeholder="Indéfini si vide" min="1">
+                         [placeholder]="'subscriptions.field_duration_placeholder' | translate" min="1">
                 </div>
               </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-ghost" (click)="showModal.set(false)">Annuler</button>
+          <button class="btn btn-ghost" (click)="showModal.set(false)">{{ 'subscriptions.cancel' | translate }}</button>
           <button class="btn btn-primary" (click)="saveSub()" [disabled]="form.invalid || saving()">
             <span class="loading-spinner" *ngIf="saving()"></span>
             <span class="material-icons-round" *ngIf="!saving()">save</span>
-            Sauvegarder
+            {{ 'subscriptions.save' | translate }}
           </button>
         </div>
       </div>
@@ -247,17 +248,19 @@ export class SubscriptionsComponent implements OnInit {
 
   form: FormGroup;
 
+  private translate = inject(TranslateService);
+
   subCategories = [
-    { value: 'ELECTRICITY', label: '⚡ Électricité', icon: 'bolt' },
-    { value: 'INTERNET', label: '🌐 Internet / Box', icon: 'wifi' },
-    { value: 'MOBILE', label: '📱 Mobile', icon: 'smartphone' },
-    { value: 'STREAMING', label: '🎬 Streaming (Netflix...)', icon: 'tv' },
-    { value: 'RENT', label: '🏠 Loyer', icon: 'home' },
-    { value: 'INSURANCE', label: '🛡️ Assurance', icon: 'security' },
-    { value: 'GYM', label: '🏋️ Sport / Gym', icon: 'fitness_center' },
-    { value: 'NEWSPAPER', label: '📰 Presse', icon: 'article' },
-    { value: 'CLOUD', label: '☁️ Cloud', icon: 'cloud' },
-    { value: 'OTHER', label: '📦 Autre', icon: 'more_horiz' },
+    { value: 'ELECTRICITY', label: 'subscriptions.cat_electricity', icon: 'bolt' },
+    { value: 'INTERNET', label: 'subscriptions.cat_internet', icon: 'wifi' },
+    { value: 'MOBILE', label: 'subscriptions.cat_mobile', icon: 'smartphone' },
+    { value: 'STREAMING', label: 'subscriptions.cat_streaming', icon: 'tv' },
+    { value: 'RENT', label: 'subscriptions.cat_rent', icon: 'home' },
+    { value: 'INSURANCE', label: 'subscriptions.cat_insurance', icon: 'security' },
+    { value: 'GYM', label: 'subscriptions.cat_gym', icon: 'fitness_center' },
+    { value: 'NEWSPAPER', label: 'subscriptions.cat_newspaper', icon: 'article' },
+    { value: 'CLOUD', label: 'subscriptions.cat_cloud', icon: 'cloud' },
+    { value: 'OTHER', label: 'subscriptions.cat_other', icon: 'more_horiz' },
   ];
 
   constructor(private api: ApiService, private fb: FormBuilder, private cdr: ChangeDetectorRef, private authService: AuthService) {
@@ -327,7 +330,7 @@ export class SubscriptionsComponent implements OnInit {
   }
 
   deleteSub(id: number) {
-    if (!confirm('Supprimer cet abonnement ?')) return;
+    if (!confirm(this.translate.instant('subscriptions.delete_confirm'))) return;
     this.api.deleteSubscription(id).subscribe(() => this.loadSubscriptions());
   }
 

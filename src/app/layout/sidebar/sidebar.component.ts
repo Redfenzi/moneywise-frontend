@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 
 interface NavItem {
@@ -12,7 +13,7 @@ interface NavItem {
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule, TranslateModule],
   template: `
     <aside class="sidebar" [class.collapsed]="collapsed" [class.open]="open">
       <div class="sidebar-logo">
@@ -27,17 +28,17 @@ interface NavItem {
            [routerLink]="item.route"
            routerLinkActive="active"
            class="nav-item"
-           [attr.data-tooltip]="collapsed ? item.label : null"
+           [attr.data-tooltip]="collapsed ? (item.label | translate) : null"
            (click)="closeSidebar.emit()">
           <span class="material-icons-round nav-icon">{{ item.icon }}</span>
-          <span class="nav-label" *ngIf="!collapsed">{{ item.label }}</span>
+          <span class="nav-label" *ngIf="!collapsed">{{ item.label | translate }}</span>
         </a>
       </nav>
 
       <div class="sidebar-footer">
         <button class="nav-item logout" (click)="auth.logout()">
           <span class="material-icons-round nav-icon">logout</span>
-          <span class="nav-label" *ngIf="!collapsed">Déconnexion</span>
+          <span class="nav-label" *ngIf="!collapsed">{{ 'nav.logout' | translate }}</span>
         </button>
       </div>
 
@@ -214,12 +215,12 @@ export class SidebarComponent {
   @Output() closeSidebar = new EventEmitter<void>();
 
   navItems: NavItem[] = [
-    { label: 'Tableau de bord', icon: 'dashboard', route: '/dashboard' },
-    { label: 'Revenus', icon: 'trending_up', route: '/incomes' },
-    { label: 'Dépenses', icon: 'shopping_cart', route: '/expenses' },
-    { label: 'Abonnements', icon: 'subscriptions', route: '/subscriptions' },
-    { label: 'Comptes bancaires', icon: 'account_balance', route: '/bank-accounts' },
-    { label: 'Mon profil', icon: 'manage_accounts', route: '/profile' },
+    { label: 'nav.dashboard',    icon: 'dashboard',       route: '/dashboard' },
+    { label: 'nav.incomes',      icon: 'trending_up',     route: '/incomes' },
+    { label: 'nav.expenses',     icon: 'shopping_cart',   route: '/expenses' },
+    { label: 'nav.subscriptions',icon: 'subscriptions',   route: '/subscriptions' },
+    { label: 'nav.bank_accounts',icon: 'account_balance', route: '/bank-accounts' },
+    { label: 'nav.profile',      icon: 'manage_accounts', route: '/profile' },
   ];
 
   constructor(public auth: AuthService) {}

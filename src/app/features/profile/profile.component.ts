@@ -1,18 +1,19 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   template: `
     <div class="page-header">
       <div>
-        <h1 class="page-title">Mon profil</h1>
-        <p class="page-subtitle">Gérez vos informations personnelles et votre mot de passe</p>
+        <h1 class="page-title">{{ 'profile.title' | translate }}</h1>
+        <p class="page-subtitle">{{ 'profile.subtitle' | translate }}</p>
       </div>
     </div>
 
@@ -22,54 +23,44 @@ import { AuthService } from '../../core/services/auth.service';
       <div class="card">
         <div class="card-header">
           <span class="material-icons-round card-icon">person</span>
-          <h2 class="card-title">Informations personnelles</h2>
+          <h2 class="card-title">{{ 'profile.personal_info' | translate }}</h2>
         </div>
 
         <form (ngSubmit)="saveProfile()" #profileForm="ngForm">
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">Prénom</label>
+              <label class="form-label">{{ 'profile.first_name' | translate }}</label>
               <input class="form-input" type="text" name="firstName"
                      [(ngModel)]="profile.firstName" required />
             </div>
             <div class="form-group">
-              <label class="form-label">Nom</label>
+              <label class="form-label">{{ 'profile.last_name' | translate }}</label>
               <input class="form-input" type="text" name="lastName"
                      [(ngModel)]="profile.lastName" required />
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Nom d'utilisateur</label>
+            <label class="form-label">{{ 'profile.username' | translate }}</label>
             <input class="form-input" type="text" [value]="currentUser()?.username" disabled />
           </div>
 
           <div class="form-group">
-            <label class="form-label">Email</label>
+            <label class="form-label">{{ 'profile.email' | translate }}</label>
             <input class="form-input" type="email" name="email"
                    [(ngModel)]="profile.email" required />
           </div>
 
           <div class="form-group">
-            <label class="form-label">Devise</label>
+            <label class="form-label">{{ 'profile.currency' | translate }}</label>
             <select class="form-input" name="currency" [(ngModel)]="profile.currency">
-              <option value="EUR">🇪🇺 Euro (EUR)</option>
-              <option value="USD">🇺🇸 Dollar américain (USD)</option>
-              <option value="GBP">🇬🇧 Livre sterling (GBP)</option>
-              <option value="CHF">🇨🇭 Franc suisse (CHF)</option>
-              <option value="CAD">🇨🇦 Dollar canadien (CAD)</option>
-              <option value="AUD">🇦🇺 Dollar australien (AUD)</option>
-              <option value="JPY">🇯🇵 Yen japonais (JPY)</option>
-              <option value="MAD">🇲🇦 Dirham marocain (MAD)</option>
-              <option value="DZD">🇩🇿 Dinar algérien (DZD)</option>
-              <option value="TND">🇹🇳 Dinar tunisien (TND)</option>
-              <option value="XOF">🌍 Franc CFA (XOF)</option>
+              <option *ngFor="let c of currencies" [value]="c">{{ 'currency.' + c | translate }}</option>
             </select>
           </div>
 
           <div *ngIf="profileSuccess" class="alert alert-success">
             <span class="material-icons-round">check_circle</span>
-            Profil mis à jour avec succès
+            {{ 'profile.success_profile' | translate }}
           </div>
           <div *ngIf="profileError" class="alert alert-error">
             <span class="material-icons-round">error</span>
@@ -79,7 +70,7 @@ import { AuthService } from '../../core/services/auth.service';
           <button class="btn btn-primary" type="submit" [disabled]="profileLoading || !profileForm.valid">
             <span class="material-icons-round" *ngIf="!profileLoading">save</span>
             <span class="material-icons-round spin" *ngIf="profileLoading">sync</span>
-            {{ profileLoading ? 'Enregistrement...' : 'Enregistrer' }}
+            {{ profileLoading ? ('profile.saving' | translate) : ('profile.save' | translate) }}
           </button>
         </form>
       </div>
@@ -88,35 +79,35 @@ import { AuthService } from '../../core/services/auth.service';
       <div class="card">
         <div class="card-header">
           <span class="material-icons-round card-icon">lock</span>
-          <h2 class="card-title">Modifier le mot de passe</h2>
+          <h2 class="card-title">{{ 'profile.change_password' | translate }}</h2>
         </div>
 
         <form (ngSubmit)="savePassword()" #passwordForm="ngForm">
           <div class="form-group">
-            <label class="form-label">Mot de passe actuel</label>
+            <label class="form-label">{{ 'profile.current_password' | translate }}</label>
             <input class="form-input" type="password" name="currentPassword"
                    [(ngModel)]="passwords.currentPassword" required />
           </div>
 
           <div class="form-group">
-            <label class="form-label">Nouveau mot de passe</label>
+            <label class="form-label">{{ 'profile.new_password' | translate }}</label>
             <input class="form-input" type="password" name="newPassword"
                    [(ngModel)]="passwords.newPassword" required minlength="6" />
           </div>
 
           <div class="form-group">
-            <label class="form-label">Confirmer le mot de passe</label>
+            <label class="form-label">{{ 'profile.confirm_password' | translate }}</label>
             <input class="form-input" type="password" name="confirmPassword"
                    [(ngModel)]="passwords.confirmPassword" required />
             <span class="hint-error"
                   *ngIf="passwords.newPassword && passwords.confirmPassword && passwords.newPassword !== passwords.confirmPassword">
-              Les mots de passe ne correspondent pas
+              {{ 'profile.password_mismatch' | translate }}
             </span>
           </div>
 
           <div *ngIf="passwordSuccess" class="alert alert-success">
             <span class="material-icons-round">check_circle</span>
-            Mot de passe modifié avec succès
+            {{ 'profile.success_password' | translate }}
           </div>
           <div *ngIf="passwordError" class="alert alert-error">
             <span class="material-icons-round">error</span>
@@ -127,7 +118,7 @@ import { AuthService } from '../../core/services/auth.service';
                   [disabled]="passwordLoading || !passwordForm.valid || passwords.newPassword !== passwords.confirmPassword">
             <span class="material-icons-round" *ngIf="!passwordLoading">lock_reset</span>
             <span class="material-icons-round spin" *ngIf="passwordLoading">sync</span>
-            {{ passwordLoading ? 'Modification...' : 'Modifier le mot de passe' }}
+            {{ passwordLoading ? ('profile.changing' | translate) : ('profile.change_btn' | translate) }}
           </button>
         </form>
       </div>
@@ -138,14 +129,14 @@ import { AuthService } from '../../core/services/auth.service';
     <div class="card delete-card">
       <div class="card-header">
         <span class="material-icons-round card-icon">manage_accounts</span>
-        <h2 class="card-title">Supprimer le compte</h2>
+          <h2 class="card-title">{{ 'profile.delete_account' | translate }}</h2>
       </div>
       <p class="delete-description">
-        Une fois votre compte supprimé, toutes vos données seront définitivement effacées. Cette action est irréversible.
+        {{ 'profile.delete_description' | translate }}
       </p>
       <button class="btn btn-delete" type="button" (click)="showDeleteModal = true">
         <span class="material-icons-round">delete_outline</span>
-        Supprimer mon compte
+          {{ 'profile.delete_btn' | translate }}
       </button>
     </div>
 
@@ -154,14 +145,14 @@ import { AuthService } from '../../core/services/auth.service';
       <div class="modal" (click)="$event.stopPropagation()">
         <div class="modal-header">
           <span class="material-icons-round modal-icon">delete_forever</span>
-          <h3 class="modal-title">Supprimer le compte</h3>
+          <h3 class="modal-title">{{ 'profile.delete_modal_title' | translate }}</h3>
         </div>
-        <p class="modal-description">Pour confirmer, saisissez votre mot de passe.</p>
+        <p class="modal-description">{{ 'profile.delete_modal_desc' | translate }}</p>
 
         <div class="form-group">
-          <label class="form-label">Mot de passe</label>
+          <label class="form-label">{{ 'profile.delete_password_label' | translate }}</label>
           <input class="form-input" type="password" [(ngModel)]="deletePassword"
-                 placeholder="Votre mot de passe actuel" />
+                 [placeholder]="'profile.delete_password_placeholder' | translate" />
         </div>
 
         <div *ngIf="deleteError" class="alert alert-error">
@@ -171,12 +162,12 @@ import { AuthService } from '../../core/services/auth.service';
 
         <div class="modal-actions">
           <button class="btn btn-secondary" type="button" (click)="closeDeleteModal()" [disabled]="deleteLoading">
-            Annuler
+            {{ 'profile.cancel' | translate }}
           </button>
           <button class="btn btn-delete-confirm" type="button" (click)="confirmDelete()" [disabled]="deleteLoading || !deletePassword">
             <span class="material-icons-round" *ngIf="!deleteLoading">delete_forever</span>
             <span class="material-icons-round spin" *ngIf="deleteLoading">sync</span>
-            {{ deleteLoading ? 'Suppression...' : 'Confirmer la suppression' }}
+            {{ deleteLoading ? ('profile.deleting' | translate) : ('profile.confirm_delete' | translate) }}
           </button>
         </div>
       </div>
@@ -446,7 +437,11 @@ import { AuthService } from '../../core/services/auth.service';
   `]
 })
 export class ProfileComponent implements OnInit {
+  private translate = inject(TranslateService);
+
   currentUser = this.authService.currentUser;
+
+  currencies = ['EUR', 'USD', 'GBP', 'CHF', 'CAD', 'AUD', 'JPY', 'MAD', 'DZD', 'TND', 'XOF'];
 
   profile = { firstName: '', lastName: '', email: '', currency: 'EUR' };
   passwords = { currentPassword: '', newPassword: '', confirmPassword: '' };
@@ -495,7 +490,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         this.profileLoading = false;
-        this.profileError = err.error?.error || 'Erreur lors de la mise à jour';
+        this.profileError = err.error?.error || this.translate.instant('common.error');
       }
     });
   }
@@ -517,7 +512,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         this.passwordLoading = false;
-        this.passwordError = err.error?.error || 'Erreur lors du changement de mot de passe';
+        this.passwordError = err.error?.error || this.translate.instant('common.error');
       }
     });
   }
@@ -538,7 +533,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         this.deleteLoading = false;
-        this.deleteError = err.error?.error || 'Erreur lors de la suppression';
+        this.deleteError = err.error?.error || this.translate.instant('common.error');
       }
     });
   }

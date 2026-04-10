@@ -1,23 +1,25 @@
-import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { AppCurrencyPipe } from '../../core/pipes/app-currency.pipe';
+import { LanguageService } from '../../core/services/language.service';
 import { MonthlySummary } from '../../core/models/models';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, AppCurrencyPipe, DatePipe, RouterLink],
+  imports: [CommonModule, AppCurrencyPipe, DatePipe, RouterLink, TranslateModule],
   template: `
     <div class="dashboard">
       <!-- PAGE HEADER -->
       <div class="page-header">
         <div class="flex flex-between flex-wrap" style="gap:16px">
           <div>
-            <h1 class="page-title">Tableau de bord</h1>
-            <p class="page-subtitle">Bonjour {{ userName }}, voici votre résumé financier du mois</p>
+            <h1 class="page-title">{{ 'dashboard.title' | translate }}</h1>
+            <p class="page-subtitle">{{ 'dashboard.subtitle' | translate:{name: userName} }}</p>
           </div>
           <div class="month-selector">
             <button class="btn btn-ghost btn-sm" (click)="prevMonth()">
@@ -34,7 +36,7 @@ import { RouterLink } from '@angular/router';
       <!-- LOADING -->
       <div *ngIf="loading()" class="loading-overlay">
         <div class="loading-spinner big-spinner"></div>
-        <span>Chargement des données...</span>
+        <span>{{ 'dashboard.loading' | translate }}</span>
       </div>
 
       <!-- ERROR -->
@@ -51,7 +53,7 @@ import { RouterLink } from '@angular/router';
               <span class="material-icons-round">trending_up</span>
             </div>
             <div class="stat-value">{{ summary()!.totalIncome | appCurrency }}</div>
-            <div class="stat-label">Revenus du mois</div>
+            <div class="stat-label">{{ 'dashboard.total_income' | translate }}</div>
           </div>
 
           <div class="stat-card expense">
@@ -59,7 +61,7 @@ import { RouterLink } from '@angular/router';
               <span class="material-icons-round">shopping_cart</span>
             </div>
             <div class="stat-value">{{ summary()!.totalExpenses | appCurrency }}</div>
-            <div class="stat-label">Achats & Dépenses</div>
+            <div class="stat-label">{{ 'dashboard.total_expenses' | translate }}</div>
           </div>
 
           <div class="stat-card subscription">
@@ -67,7 +69,7 @@ import { RouterLink } from '@angular/router';
               <span class="material-icons-round">subscriptions</span>
             </div>
             <div class="stat-value">{{ summary()!.totalSubscriptions | appCurrency }}</div>
-            <div class="stat-label">Abonnements actifs</div>
+            <div class="stat-label">{{ 'dashboard.total_subscriptions' | translate }}</div>
           </div>
 
           <div class="stat-card" [class.balance]="summary()!.balance >= 0">
@@ -77,7 +79,7 @@ import { RouterLink } from '@angular/router';
             <div class="stat-value" [style.color]="summary()!.balance >= 0 ? 'var(--success)' : 'var(--danger)'">
               {{ summary()!.balance | appCurrency }}
             </div>
-            <div class="stat-label">Solde restant</div>
+            <div class="stat-label">{{ 'dashboard.balance' | translate }}</div>
           </div>
         </div>
 
@@ -88,7 +90,7 @@ import { RouterLink } from '@angular/router';
             <div class="card-header">
               <div class="card-title">
                 <span class="material-icons-round">donut_large</span>
-                Aperçu du budget
+                {{ 'dashboard.budget_overview' | translate }}
               </div>
             </div>
 
@@ -96,7 +98,7 @@ import { RouterLink } from '@angular/router';
               <div class="budget-item">
                 <div class="flex flex-between">
                   <span class="budget-label">
-                    <span class="budget-dot income"></span>Revenus
+                    <span class="budget-dot income"></span>{{ 'dashboard.revenues' | translate }}
                   </span>
                   <span class="amount positive">{{ summary()!.totalIncome | appCurrency }}</span>
                 </div>
@@ -108,7 +110,7 @@ import { RouterLink } from '@angular/router';
               <div class="budget-item">
                 <div class="flex flex-between">
                   <span class="budget-label">
-                    <span class="budget-dot expense"></span>Achats
+                    <span class="budget-dot expense"></span>{{ 'dashboard.expenses' | translate }}
                   </span>
                   <span class="amount negative">{{ summary()!.totalExpenses | appCurrency }}</span>
                 </div>
@@ -121,7 +123,7 @@ import { RouterLink } from '@angular/router';
               <div class="budget-item">
                 <div class="flex flex-between">
                   <span class="budget-label">
-                    <span class="budget-dot subscription"></span>Abonnements
+                    <span class="budget-dot subscription"></span>{{ 'dashboard.subscriptions' | translate }}
                   </span>
                   <span class="amount warning-color">{{ summary()!.totalSubscriptions | appCurrency }}</span>
                 </div>
@@ -134,13 +136,13 @@ import { RouterLink } from '@angular/router';
               <hr class="divider">
 
               <div class="budget-total">
-                <span>Total déductions</span>
+                <span>{{ 'dashboard.total_deductions' | translate }}</span>
                 <span class="amount negative">
                   -{{ summary()!.totalDeductions | appCurrency }}
                 </span>
               </div>
               <div class="budget-total balance">
-                <span>Solde net</span>
+                <span>{{ 'dashboard.net_balance' | translate }}</span>
                 <span class="amount" [class.positive]="summary()!.balance >= 0" [class.negative]="summary()!.balance < 0">
                   {{ summary()!.balance | appCurrency }}
                 </span>
@@ -153,25 +155,25 @@ import { RouterLink } from '@angular/router';
             <div class="card-header">
               <div class="card-title">
                 <span class="material-icons-round">account_balance</span>
-                Épargne totale
+                                {{ 'dashboard.total_savings' | translate }}
               </div>
               <a routerLink="/bank-accounts" class="btn btn-secondary btn-sm">
-                <span class="material-icons-round">manage_accounts</span>Gérer
+                <span class="material-icons-round">manage_accounts</span>{{ 'common.manage' | translate }}
               </a>
             </div>
 
             <div class="savings-total">
               <div class="savings-amount">{{ summary()!.totalSavings | appCurrency }}</div>
-              <div class="savings-label">Tous comptes confondus</div>
+              <div class="savings-label">{{ 'dashboard.all_accounts' | translate }}</div>
             </div>
 
             <div class="savings-hint" *ngIf="summary()!.balance > 0">
               <span class="material-icons-round" style="color: var(--success); font-size: 18px;">lightbulb</span>
-              <span>Vous avez <strong>{{ summary()!.balance | appCurrency }}</strong> disponible ce mois-ci</span>
+              <span>{{ 'dashboard.available_before' | translate }} <strong>{{ summary()!.balance | appCurrency }}</strong> {{ 'dashboard.available_after' | translate }}</span>
             </div>
             <div class="savings-hint danger" *ngIf="summary()!.balance < 0">
               <span class="material-icons-round" style="color: var(--danger); font-size: 18px;">warning</span>
-              <span>Attention, vos dépenses dépassent vos revenus ce mois-ci</span>
+              <span>{{ 'dashboard.overspent' | translate }}</span>
             </div>
           </div>
         </div>
@@ -181,7 +183,7 @@ import { RouterLink } from '@angular/router';
           <div class="card-header">
             <div class="card-title">
               <span class="material-icons-round">category</span>
-              Répartition des dépenses par catégorie
+              {{ 'dashboard.expenses_by_category' | translate }}
             </div>
           </div>
           <div class="categories-grid">
@@ -193,7 +195,7 @@ import { RouterLink } from '@angular/router';
                   </span>
                 </span>
                 <div>
-                  <div class="category-name">{{ getCategoryLabel(cat[0]) }}</div>
+                  <div class="category-name">{{ getCategoryLabel(cat[0]) | translate }}</div>
                   <div class="category-amount">{{ cat[1] | appCurrency }}</div>
                 </div>
               </div>
@@ -212,25 +214,25 @@ import { RouterLink } from '@angular/router';
           <div class="card-header">
             <div class="card-title">
               <span class="material-icons-round">bolt</span>
-              Actions rapides
+              {{ 'dashboard.quick_actions' | translate }}
             </div>
           </div>
           <div class="quick-actions">
             <a routerLink="/incomes" class="quick-action income">
               <span class="material-icons-round">add_circle</span>
-              <span>Ajouter un revenu</span>
+              <span>{{ 'dashboard.add_income' | translate }}</span>
             </a>
             <a routerLink="/expenses" class="quick-action expense">
               <span class="material-icons-round">remove_circle</span>
-              <span>Ajouter une dépense</span>
+              <span>{{ 'dashboard.add_expense' | translate }}</span>
             </a>
             <a routerLink="/subscriptions" class="quick-action subscription">
               <span class="material-icons-round">add_card</span>
-              <span>Nouvel abonnement</span>
+              <span>{{ 'dashboard.new_subscription' | translate }}</span>
             </a>
             <a routerLink="/bank-accounts" class="quick-action savings">
               <span class="material-icons-round">account_balance</span>
-              <span>Gérer ses comptes</span>
+              <span>{{ 'dashboard.manage_accounts' | translate }}</span>
             </a>
           </div>
         </div>
@@ -417,10 +419,7 @@ export class DashboardComponent implements OnInit {
   currentMonth = new Date().getMonth() + 1;
   currentYear = new Date().getFullYear();
 
-  private readonly MONTHS_FR = [
-    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
-  ];
+  private langService = inject(LanguageService);
 
   constructor(private api: ApiService, public auth: AuthService, private cdr: ChangeDetectorRef) {}
 
@@ -434,7 +433,9 @@ export class DashboardComponent implements OnInit {
   }
 
   get monthLabel(): string {
-    return `${this.MONTHS_FR[this.currentMonth - 1]} ${this.currentYear}`;
+    const locale = this.langService.currentLang();
+    const date = new Date(this.currentYear, this.currentMonth - 1, 1);
+    return date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
   }
 
   prevMonth() {
@@ -467,7 +468,7 @@ export class DashboardComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error.set(err?.error?.message || 'Erreur de chargement des données');
+        this.error.set(err?.error?.message || 'dashboard.error_load');
         this.loading.set(false);
         this.cdr.detectChanges();
       }
@@ -491,12 +492,12 @@ export class DashboardComponent implements OnInit {
   }
 
   getCategoryLabel(cat: string): string {
-    const labels: Record<string, string> = {
-      FOOD: 'Alimentation', CLOTHING: 'Vêtements', ELECTRONICS: 'Électronique',
-      TRANSPORT: 'Transport', HEALTH: 'Santé', ENTERTAINMENT: 'Loisirs',
-      EDUCATION: 'Éducation', HOME: 'Maison', OTHER: 'Autre'
+    const keys: Record<string, string> = {
+      FOOD: 'expenses.cat_food', CLOTHING: 'expenses.cat_clothing', ELECTRONICS: 'expenses.cat_electronics',
+      TRANSPORT: 'expenses.cat_transport', HEALTH: 'expenses.cat_health', ENTERTAINMENT: 'expenses.cat_entertainment',
+      EDUCATION: 'expenses.cat_education', HOME: 'expenses.cat_home', OTHER: 'expenses.cat_other'
     };
-    return labels[cat] || cat;
+    return keys[cat] || cat;
   }
 
   getCategoryIcon(cat: string): string {

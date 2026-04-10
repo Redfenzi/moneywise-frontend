@@ -1,26 +1,27 @@
-import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { AppCurrencyPipe } from '../../core/pipes/app-currency.pipe';
 import { Expense, ExpenseCategory } from '../../core/models/models';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-expenses',
   standalone: true,
-  imports: [CommonModule, AppCurrencyPipe, DatePipe, ReactiveFormsModule],
+  imports: [CommonModule, AppCurrencyPipe, DatePipe, ReactiveFormsModule, TranslateModule],
   template: `
     <div>
       <div class="page-header">
         <div class="flex flex-between flex-wrap" style="gap: 16px;">
           <div>
-            <h1 class="page-title">Dépenses</h1>
-            <p class="page-subtitle">Suivez tous vos achats et dépenses</p>
+            <h1 class="page-title">{{ 'expenses.title' | translate }}</h1>
+            <p class="page-subtitle">{{ 'expenses.subtitle' | translate }}</p>
           </div>
           <button class="btn btn-danger" style="background: var(--danger); color: white;" (click)="openModal()">
             <span class="material-icons-round">add</span>
-            Ajouter une dépense
+            {{ 'expenses.add_btn' | translate }}
           </button>
         </div>
       </div>
@@ -32,7 +33,7 @@ import { Expense, ExpenseCategory } from '../../core/models/models';
                 [class.active]="activeFilter() === cat.value"
                 (click)="activeFilter.set(cat.value)">
           <span class="material-icons-round">{{ cat.icon }}</span>
-          {{ cat.label }}
+          {{ cat.label | translate }}
         </button>
       </div>
 
@@ -40,11 +41,11 @@ import { Expense, ExpenseCategory } from '../../core/models/models';
         <div class="card-header">
           <div class="card-title">
             <span class="material-icons-round">receipt_long</span>
-            Historique des dépenses
+            {{ 'expenses.history' | translate }}
             <span class="badge badge-danger" style="margin-left: 4px;">{{ filteredExpenses().length }}</span>
           </div>
           <div class="total-badge">
-            Total: <strong class="amount negative">{{ totalFiltered() | appCurrency }}</strong>
+            {{ 'expenses.total' | translate }}: <strong class="amount negative">{{ totalFiltered() | appCurrency }}</strong>
           </div>
         </div>
 
@@ -54,10 +55,10 @@ import { Expense, ExpenseCategory } from '../../core/models/models';
 
         <div *ngIf="!loading() && filteredExpenses().length === 0" class="empty-state">
           <div class="empty-icon"><span class="material-icons-round">shopping_bag</span></div>
-          <h3>Aucune dépense enregistrée</h3>
-          <p>Commencez à enregistrer vos achats</p>
+          <h3>{{ 'expenses.empty_title' | translate }}</h3>
+          <p>{{ 'expenses.empty_subtitle' | translate }}</p>
           <button class="btn btn-primary" (click)="openModal()">
-            <span class="material-icons-round">add</span>Ajouter une dépense
+            <span class="material-icons-round">add</span>{{ 'expenses.add_btn' | translate }}
           </button>
         </div>
 
@@ -65,11 +66,11 @@ import { Expense, ExpenseCategory } from '../../core/models/models';
           <table>
             <thead>
               <tr>
-                <th>Description</th>
-                <th>Catégorie</th>
-                <th>Montant</th>
-                <th>Date</th>
-                <th>Actions</th>
+                <th>{{ 'expenses.col_description' | translate }}</th>
+                <th>{{ 'expenses.col_category' | translate }}</th>
+                <th>{{ 'expenses.col_amount' | translate }}</th>
+                <th>{{ 'expenses.col_date' | translate }}</th>
+                <th>{{ 'expenses.col_actions' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -84,7 +85,7 @@ import { Expense, ExpenseCategory } from '../../core/models/models';
                     {{ expense.description }}
                   </div>
                 </td>
-                <td><span class="category-pill">{{ getCategoryLabel(expense.category) }}</span></td>
+                <td><span class="category-pill">{{ getCategoryLabel(expense.category) | translate }}</span></td>
                 <td><span class="amount negative">-{{ expense.amount | appCurrency }}</span></td>
                 <td>{{ expense.expenseDate | date:'dd/MM/yyyy' }}</td>
                 <td>
@@ -110,7 +111,7 @@ import { Expense, ExpenseCategory } from '../../core/models/models';
         <div class="modal-header">
           <div class="modal-title">
             <span class="material-icons-round">{{ editingId() ? 'edit' : 'add_shopping_cart' }}</span>
-            {{ editingId() ? 'Modifier la dépense' : 'Nouvelle dépense' }}
+            {{ editingId() ? ('expenses.modal_edit' | translate) : ('expenses.modal_new' | translate) }}
           </div>
           <button class="btn btn-icon" (click)="showModal.set(false)">
             <span class="material-icons-round">close</span>
@@ -120,15 +121,15 @@ import { Expense, ExpenseCategory } from '../../core/models/models';
           <form [formGroup]="form">
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Catégorie</label>
+                <label class="form-label">{{ 'expenses.field_category' | translate }}</label>
                 <select class="form-control" formControlName="category">
                   <option *ngFor="let c of expenseCategories.slice(1)" [value]="c.value">
-                    {{ c.label }}
+                    {{ c.label | translate }}
                   </option>
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label">Montant ({{ currencyCode }})</label>
+                <label class="form-label">{{ 'expenses.field_amount' | translate }} ({{ currencyCode }})</label>
                 <div class="input-with-icon">
                   <span class="material-icons-round input-icon">euro</span>
                   <input type="number" class="form-control" formControlName="amount"
@@ -137,22 +138,22 @@ import { Expense, ExpenseCategory } from '../../core/models/models';
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label">Description</label>
+              <label class="form-label">{{ 'expenses.field_description' | translate }}</label>
               <input type="text" class="form-control" formControlName="description"
-                     placeholder="Ex: Courses Carrefour, T-shirt Nike...">
+                     [placeholder]="'expenses.field_description_placeholder' | translate">
             </div>
             <div class="form-group">
-              <label class="form-label">Date</label>
+              <label class="form-label">{{ 'expenses.field_date' | translate }}</label>
               <input type="date" class="form-control" formControlName="expenseDate">
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-ghost" (click)="showModal.set(false)">Annuler</button>
+          <button class="btn btn-ghost" (click)="showModal.set(false)">{{ 'expenses.cancel' | translate }}</button>
           <button class="btn btn-primary" (click)="saveExpense()" [disabled]="form.invalid || saving()">
             <span class="loading-spinner" *ngIf="saving()"></span>
             <span class="material-icons-round" *ngIf="!saving()">save</span>
-            Sauvegarder
+            {{ 'expenses.save' | translate }}
           </button>
         </div>
       </div>
@@ -196,17 +197,19 @@ export class ExpensesComponent implements OnInit {
 
   form: FormGroup;
 
+  private translate = inject(TranslateService);
+
   expenseCategories = [
-    { value: 'ALL', label: 'Tous', icon: 'list' },
-    { value: 'FOOD', label: 'Alimentation', icon: 'restaurant' },
-    { value: 'CLOTHING', label: 'Vêtements', icon: 'checkroom' },
-    { value: 'ELECTRONICS', label: 'Électronique', icon: 'devices' },
-    { value: 'TRANSPORT', label: 'Transport', icon: 'directions_car' },
-    { value: 'HEALTH', label: 'Santé', icon: 'local_hospital' },
-    { value: 'ENTERTAINMENT', label: 'Loisirs', icon: 'movie' },
-    { value: 'EDUCATION', label: 'Éducation', icon: 'school' },
-    { value: 'HOME', label: 'Maison', icon: 'home' },
-    { value: 'OTHER', label: 'Autre', icon: 'more_horiz' },
+    { value: 'ALL', label: 'expenses.cat_all', icon: 'list' },
+    { value: 'FOOD', label: 'expenses.cat_food', icon: 'restaurant' },
+    { value: 'CLOTHING', label: 'expenses.cat_clothing', icon: 'checkroom' },
+    { value: 'ELECTRONICS', label: 'expenses.cat_electronics', icon: 'devices' },
+    { value: 'TRANSPORT', label: 'expenses.cat_transport', icon: 'directions_car' },
+    { value: 'HEALTH', label: 'expenses.cat_health', icon: 'local_hospital' },
+    { value: 'ENTERTAINMENT', label: 'expenses.cat_entertainment', icon: 'movie' },
+    { value: 'EDUCATION', label: 'expenses.cat_education', icon: 'school' },
+    { value: 'HOME', label: 'expenses.cat_home', icon: 'home' },
+    { value: 'OTHER', label: 'expenses.cat_other', icon: 'more_horiz' },
   ];
 
   constructor(private api: ApiService, private fb: FormBuilder, private cdr: ChangeDetectorRef, private authService: AuthService) {
@@ -266,7 +269,7 @@ export class ExpensesComponent implements OnInit {
   }
 
   deleteExpense(id: number) {
-    if (!confirm('Supprimer cette dépense ?')) return;
+    if (!confirm(this.translate.instant('expenses.delete_confirm'))) return;
     this.api.deleteExpense(id).subscribe(() => this.loadExpenses());
   }
 

@@ -1,26 +1,27 @@
-import { Component, OnInit, signal, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { AppCurrencyPipe } from '../../core/pipes/app-currency.pipe';
 import { Income, IncomeType } from '../../core/models/models';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-incomes',
   standalone: true,
-  imports: [CommonModule, AppCurrencyPipe, DatePipe, ReactiveFormsModule],
+  imports: [CommonModule, AppCurrencyPipe, DatePipe, ReactiveFormsModule, TranslateModule],
   template: `
     <div>
       <div class="page-header">
         <div class="flex flex-between flex-wrap" style="gap: 16px;">
           <div>
-            <h1 class="page-title">Revenus</h1>
-            <p class="page-subtitle">Gérez tous vos revenus : salaire, ventes, jeux...</p>
+            <h1 class="page-title">{{ 'incomes.title' | translate }}</h1>
+            <p class="page-subtitle">{{ 'incomes.subtitle' | translate }}</p>
           </div>
           <button class="btn btn-primary" (click)="openModal()">
             <span class="material-icons-round">add</span>
-            Ajouter un revenu
+            {{ 'incomes.add_btn' | translate }}
           </button>
         </div>
       </div>
@@ -32,7 +33,7 @@ import { Income, IncomeType } from '../../core/models/models';
                 [class.active]="activeFilter() === type.value"
                 (click)="activeFilter.set(type.value)">
           <span class="material-icons-round">{{ type.icon }}</span>
-          {{ type.label }}
+          {{ type.label | translate }}
         </button>
       </div>
 
@@ -41,11 +42,11 @@ import { Income, IncomeType } from '../../core/models/models';
         <div class="card-header">
           <div class="card-title">
             <span class="material-icons-round">trending_up</span>
-            Historique des revenus
+            {{ 'incomes.history' | translate }}
             <span class="badge badge-primary" style="margin-left: 4px;">{{ filteredIncomes().length }}</span>
           </div>
           <div class="total-badge">
-            Total: <strong class="amount positive">{{ totalFiltered() | appCurrency }}</strong>
+            {{ 'incomes.total' | translate }}: <strong class="amount positive">{{ totalFiltered() | appCurrency }}</strong>
           </div>
         </div>
 
@@ -55,10 +56,10 @@ import { Income, IncomeType } from '../../core/models/models';
 
         <div *ngIf="!loading() && filteredIncomes().length === 0" class="empty-state">
           <div class="empty-icon"><span class="material-icons-round">savings</span></div>
-          <h3>Aucun revenu enregistré</h3>
-          <p>Commencez par ajouter votre premier revenu</p>
+          <h3>{{ 'incomes.empty_title' | translate }}</h3>
+          <p>{{ 'incomes.empty_subtitle' | translate }}</p>
           <button class="btn btn-primary" (click)="openModal()">
-            <span class="material-icons-round">add</span>Ajouter un revenu
+            <span class="material-icons-round">add</span>{{ 'incomes.add_btn' | translate }}
           </button>
         </div>
 
@@ -66,12 +67,12 @@ import { Income, IncomeType } from '../../core/models/models';
           <table>
             <thead>
               <tr>
-                <th>Description</th>
-                <th>Type</th>
-                <th>Montant</th>
-                <th>Date</th>
-                <th>Statut</th>
-                <th>Actions</th>
+                <th>{{ 'incomes.col_description' | translate }}</th>
+                <th>{{ 'incomes.col_type' | translate }}</th>
+                <th>{{ 'incomes.col_amount' | translate }}</th>
+                <th>{{ 'incomes.col_date' | translate }}</th>
+                <th>{{ 'incomes.col_status' | translate }}</th>
+                <th>{{ 'incomes.col_actions' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -86,12 +87,12 @@ import { Income, IncomeType } from '../../core/models/models';
                     {{ income.description }}
                   </div>
                 </td>
-                <td><span class="badge badge-primary">{{ getTypeLabel(income.type) }}</span></td>
+                <td><span class="badge badge-primary">{{ getTypeLabel(income.type) | translate }}</span></td>
                 <td><span class="amount positive">+{{ income.amount | appCurrency }}</span></td>
                 <td>{{ income.incomeDate | date:'dd/MM/yyyy' }}</td>
                 <td>
                   <span class="badge" [class.badge-success]="income.isFixedSalary" [class.badge-info]="!income.isFixedSalary">
-                    {{ income.isFixedSalary ? 'Fixe' : 'Variable' }}
+                    {{ income.isFixedSalary ? ('incomes.status_fixed' | translate) : ('incomes.status_variable' | translate) }}
                   </span>
                 </td>
                 <td>
@@ -117,7 +118,7 @@ import { Income, IncomeType } from '../../core/models/models';
         <div class="modal-header">
           <div class="modal-title">
             <span class="material-icons-round">{{ editingId() ? 'edit' : 'add_circle' }}</span>
-            {{ editingId() ? 'Modifier le revenu' : 'Nouveau revenu' }}
+            {{ editingId() ? ('incomes.modal_edit' | translate) : ('incomes.modal_new' | translate) }}
           </div>
           <button class="btn btn-icon" (click)="showModal.set(false)">
             <span class="material-icons-round">close</span>
@@ -127,15 +128,15 @@ import { Income, IncomeType } from '../../core/models/models';
           <form [formGroup]="form" (ngSubmit)="saveIncome()">
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Type de revenu</label>
+                <label class="form-label">{{ 'incomes.field_type' | translate }}</label>
                 <select class="form-control" formControlName="type">
                   <option *ngFor="let t of incomeTypes" [value]="t.value">
-                    {{ t.label }}
+                    {{ t.label | translate }}
                   </option>
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label">Montant ({{ currencyCode }})</label>
+                <label class="form-label">{{ 'incomes.field_amount' | translate }} ({{ currencyCode }})</label>
                 <div class="input-with-icon">
                   <span class="material-icons-round input-icon">euro</span>
                   <input type="number" class="form-control" formControlName="amount"
@@ -145,33 +146,33 @@ import { Income, IncomeType } from '../../core/models/models';
             </div>
 
             <div class="form-group">
-              <label class="form-label">Description</label>
+              <label class="form-label">{{ 'incomes.field_description' | translate }}</label>
               <input type="text" class="form-control" formControlName="description"
-                     placeholder="Ex: Salaire janvier, Vente voiture...">
+                     [placeholder]="'incomes.field_description_placeholder' | translate">
             </div>
 
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Date</label>
+                <label class="form-label">{{ 'incomes.field_date' | translate }}</label>
                 <input type="date" class="form-control" formControlName="incomeDate">
               </div>
 
               <div class="form-group" *ngIf="form.get('type')?.value === 'SALARY'">
-                <label class="form-label">Type de salaire</label>
+                <label class="form-label">{{ 'incomes.field_salary_type' | translate }}</label>
                 <select class="form-control" formControlName="isFixedSalary">
-                  <option [value]="true">Salaire fixe</option>
-                  <option [value]="false">Salaire variable</option>
+                  <option [value]="true">{{ 'incomes.fixed' | translate }}</option>
+                  <option [value]="false">{{ 'incomes.variable' | translate }}</option>
                 </select>
               </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-ghost" (click)="showModal.set(false)">Annuler</button>
+          <button class="btn btn-ghost" (click)="showModal.set(false)">{{ 'incomes.cancel' | translate }}</button>
           <button class="btn btn-primary" (click)="saveIncome()" [disabled]="form.invalid || saving()">
             <span class="loading-spinner" *ngIf="saving()"></span>
             <span class="material-icons-round" *ngIf="!saving()">save</span>
-            {{ saving() ? 'Sauvegarde...' : 'Sauvegarder' }}
+            {{ saving() ? ('incomes.saving' | translate) : ('incomes.save' | translate) }}
           </button>
         </div>
       </div>
@@ -245,14 +246,16 @@ export class IncomesComponent implements OnInit {
 
   form: FormGroup;
 
+  private translate = inject(TranslateService);
+
   incomeTypes = [
-    { value: 'ALL', label: 'Tous', icon: 'list' },
-    { value: 'SALARY', label: 'Salaire', icon: 'work' },
-    { value: 'SALE', label: 'Vente', icon: 'sell' },
-    { value: 'GAMBLING', label: 'Jeux', icon: 'casino' },
-    { value: 'FREELANCE', label: 'Freelance', icon: 'laptop' },
-    { value: 'INVESTMENT', label: 'Investissement', icon: 'show_chart' },
-    { value: 'OTHER', label: 'Autre', icon: 'more_horiz' },
+    { value: 'ALL', label: 'incomes.type_all', icon: 'list' },
+    { value: 'SALARY', label: 'incomes.type_salary', icon: 'work' },
+    { value: 'SALE', label: 'incomes.type_sale', icon: 'sell' },
+    { value: 'GAMBLING', label: 'incomes.type_gambling', icon: 'casino' },
+    { value: 'FREELANCE', label: 'incomes.type_freelance', icon: 'laptop' },
+    { value: 'INVESTMENT', label: 'incomes.type_investment', icon: 'show_chart' },
+    { value: 'OTHER', label: 'incomes.type_other', icon: 'more_horiz' },
   ];
 
   constructor(private api: ApiService, private fb: FormBuilder, private cdr: ChangeDetectorRef, private authService: AuthService) {
@@ -335,7 +338,7 @@ export class IncomesComponent implements OnInit {
   }
 
   deleteIncome(id: number) {
-    if (!confirm('Supprimer ce revenu ?')) return;
+    if (!confirm(this.translate.instant('incomes.delete_confirm'))) return;
     this.api.deleteIncome(id).subscribe(() => this.loadIncomes());
   }
 

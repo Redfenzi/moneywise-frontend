@@ -1,26 +1,27 @@
-import { Component, OnInit, signal, computed, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal, computed, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { AppCurrencyPipe } from '../../core/pipes/app-currency.pipe';
 import { BankAccount, AccountType } from '../../core/models/models';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-bank-accounts',
   standalone: true,
-  imports: [CommonModule, AppCurrencyPipe, ReactiveFormsModule],
+  imports: [CommonModule, AppCurrencyPipe, ReactiveFormsModule, TranslateModule],
   template: `
     <div>
       <div class="page-header">
         <div class="flex flex-between flex-wrap" style="gap: 16px;">
           <div>
-            <h1 class="page-title">Comptes bancaires</h1>
-            <p class="page-subtitle">Gérez vos comptes et votre épargne en un seul endroit</p>
+            <h1 class="page-title">{{ 'bank_accounts.title' | translate }}</h1>
+            <p class="page-subtitle">{{ 'bank_accounts.subtitle' | translate }}</p>
           </div>
           <button class="btn btn-primary" (click)="openModal()">
             <span class="material-icons-round">add</span>
-            Nouveau compte
+            {{ 'bank_accounts.add_btn' | translate }}
           </button>
         </div>
       </div>
@@ -32,21 +33,21 @@ import { BankAccount, AccountType } from '../../core/models/models';
             <span class="material-icons-round" style="color: var(--secondary); font-size:24px;">account_balance_wallet</span>
           </div>
           <div class="stat-value" style="color: var(--secondary);">{{ totalBalance() | appCurrency }}</div>
-          <div class="stat-label">Épargne totale</div>
+          <div class="stat-label">{{ 'bank_accounts.total_savings' | translate }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon" style="background: rgba(108,99,255,0.1);">
             <span class="material-icons-round" style="color: var(--primary-light); font-size:24px;">account_balance</span>
           </div>
           <div class="stat-value">{{ accounts().length }}</div>
-          <div class="stat-label">Comptes enregistrés</div>
+          <div class="stat-label">{{ 'bank_accounts.accounts_count' | translate }}</div>
         </div>
         <div class="stat-card" *ngIf="primaryAccount()">
           <div class="stat-icon" style="background: rgba(245,158,11,0.1);">
             <span class="material-icons-round" style="color: #F59E0B; font-size:24px;">star</span>
           </div>
           <div class="stat-value">{{ primaryAccount()!.balance | appCurrency }}</div>
-          <div class="stat-label">Compte principal</div>
+          <div class="stat-label">{{ 'bank_accounts.primary_account' | translate }}</div>
         </div>
       </div>
 
@@ -71,10 +72,10 @@ import { BankAccount, AccountType } from '../../core/models/models';
               <span class="material-icons-round" [style.color]="getTypeColor(acc.accountType)">
                 {{ getTypeIcon(acc.accountType) }}
               </span>
-              {{ getTypeLabel(acc.accountType) }}
+              {{ getTypeLabel(acc.accountType) | translate }}
             </div>
-            <span class="badge badge-warning" *ngIf="acc.isPrimary">
-              <span class="material-icons-round" style="font-size:12px;">star</span>Principal
+              <span class="badge badge-warning" *ngIf="acc.isPrimary">
+              <span class="material-icons-round" style="font-size:12px;">star</span>{{ 'bank_accounts.primary_account' | translate }}
             </span>
           </div>
 
@@ -94,7 +95,7 @@ import { BankAccount, AccountType } from '../../core/models/models';
 
           <div class="account-actions">
             <button class="btn btn-ghost btn-sm" (click)="editAccount(acc)">
-              <span class="material-icons-round">edit</span>Modifier
+              <span class="material-icons-round">edit</span>{{ 'bank_accounts.edit' | translate }}
             </button>
             <button class="btn btn-icon" style="color:var(--danger);" (click)="deleteAccount(acc.id!)">
               <span class="material-icons-round">delete</span>
@@ -110,7 +111,7 @@ import { BankAccount, AccountType } from '../../core/models/models';
         <div class="modal-header">
           <div class="modal-title">
             <span class="material-icons-round">{{ editingId() ? 'edit' : 'account_balance' }}</span>
-            {{ editingId() ? 'Modifier le compte' : 'Nouveau compte' }}
+            {{ editingId() ? ('bank_accounts.modal_edit' | translate) : ('bank_accounts.modal_new' | translate) }}
           </div>
           <button class="btn btn-icon" (click)="showModal.set(false)">
             <span class="material-icons-round">close</span>
@@ -120,25 +121,25 @@ import { BankAccount, AccountType } from '../../core/models/models';
           <form [formGroup]="form">
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Banque</label>
+                <label class="form-label">{{ 'bank_accounts.field_bank_name' | translate }}</label>
                 <input type="text" class="form-control" formControlName="bankName"
-                       placeholder="Ex: BNP, Crédit Agricole, Revolut...">
+                       [placeholder]="'bank_accounts.field_bank_name_placeholder' | translate">
               </div>
               <div class="form-group">
-                <label class="form-label">Nom du compte</label>
+                <label class="form-label">{{ 'bank_accounts.field_account_name' | translate }}</label>
                 <input type="text" class="form-control" formControlName="accountName"
-                       placeholder="Ex: Compte courant, Livret A...">
+                       [placeholder]="'bank_accounts.field_account_name_placeholder' | translate">
               </div>
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Type de compte</label>
+                <label class="form-label">{{ 'bank_accounts.field_account_type' | translate }}</label>
                 <select class="form-control" formControlName="accountType">
-                  <option *ngFor="let t of accountTypes" [value]="t.value">{{ t.label }}</option>
+                  <option *ngFor="let t of accountTypes" [value]="t.value">{{ t.label | translate }}</option>
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label">Solde ({{ currencyCode }})</label>
+                <label class="form-label">{{ 'bank_accounts.field_balance' | translate }} ({{ currencyCode }})</label>
                 <div class="input-with-icon">
                   <span class="material-icons-round input-icon">euro</span>
                   <input type="number" class="form-control" formControlName="balance"
@@ -150,17 +151,17 @@ import { BankAccount, AccountType } from '../../core/models/models';
               <label style="display:flex;align-items:center;gap:10px;cursor:pointer;color:var(--text-secondary);">
                 <input type="checkbox" formControlName="isPrimary"
                        style="width:18px;height:18px;accent-color:var(--primary);">
-                <span>Définir comme compte principal</span>
+                <span>{{ 'bank_accounts.field_primary' | translate }}</span>
               </label>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-ghost" (click)="showModal.set(false)">Annuler</button>
+          <button class="btn btn-ghost" (click)="showModal.set(false)">{{ 'bank_accounts.cancel' | translate }}</button>
           <button class="btn btn-primary" (click)="saveAccount()" [disabled]="form.invalid || saving()">
             <span class="loading-spinner" *ngIf="saving()"></span>
             <span class="material-icons-round" *ngIf="!saving()">save</span>
-            Sauvegarder
+            {{ 'bank_accounts.save' | translate }}
           </button>
         </div>
       </div>
@@ -205,12 +206,14 @@ export class BankAccountsComponent implements OnInit {
 
   form: FormGroup;
 
+  private translate = inject(TranslateService);
+
   accountTypes = [
-    { value: 'CHECKING',   label: '💳 Compte courant',   icon: 'payment',     color: '#3B82F6' },
-    { value: 'SAVINGS',    label: '💰 Épargne / Livret', icon: 'savings',     color: '#10B981' },
-    { value: 'INVESTMENT', label: '📈 Investissement',   icon: 'trending_up', color: '#8B5CF6' },
-    { value: 'CRYPTO',     label: '₿ Crypto',            icon: 'currency_bitcoin', color: '#F59E0B' },
-    { value: 'OTHER',      label: '🏦 Autre',            icon: 'account_balance', color: '#6B7280' },
+    { value: 'CHECKING',   label: 'bank_accounts.type_checking',    icon: 'payment',          color: '#3B82F6' },
+    { value: 'SAVINGS',    label: 'bank_accounts.type_savings',     icon: 'savings',          color: '#10B981' },
+    { value: 'INVESTMENT', label: 'bank_accounts.type_investment',  icon: 'trending_up',      color: '#8B5CF6' },
+    { value: 'CRYPTO',     label: 'bank_accounts.type_crypto',      icon: 'currency_bitcoin', color: '#F59E0B' },
+    { value: 'OTHER',      label: 'bank_accounts.type_other',       icon: 'account_balance',  color: '#6B7280' },
   ];
 
   constructor(private api: ApiService, private fb: FormBuilder, private cdr: ChangeDetectorRef, private authService: AuthService) {
@@ -269,7 +272,7 @@ export class BankAccountsComponent implements OnInit {
   }
 
   deleteAccount(id: number) {
-    if (!confirm('Supprimer ce compte ?')) return;
+    if (!confirm(this.translate.instant('bank_accounts.delete_confirm'))) return;
     this.api.deleteBankAccount(id).subscribe(() => this.loadAccounts());
   }
 
