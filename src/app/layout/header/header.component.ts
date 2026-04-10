@@ -17,7 +17,7 @@ import { RouterLink } from '@angular/router';
       <div class="header-right">
         <div class="date-display">
           <span class="material-icons-round">calendar_today</span>
-          <span>{{ today | date:'EEEE d MMMM yyyy' : '' : lang.currentLang() }}</span>
+          <span>{{ todayLabel }}</span>
         </div>
 
         <div class="lang-switcher">
@@ -137,6 +137,12 @@ export class HeaderComponent {
   today = new Date();
 
   constructor(public auth: AuthService, public lang: LanguageService) {}
+
+  get todayLabel(): string {
+    const locale = this.lang.currentLang();
+    const raw = this.today.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    return raw.replace(/\b\w/g, c => c.toUpperCase());
+  }
 
   get userInitials(): string {
     const user = this.auth.currentUser();
