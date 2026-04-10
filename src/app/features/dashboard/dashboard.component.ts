@@ -435,7 +435,8 @@ export class DashboardComponent implements OnInit {
   get monthLabel(): string {
     const locale = this.langService.currentLang();
     const date = new Date(this.currentYear, this.currentMonth - 1, 1);
-    return date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
+    const raw = date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
+    return raw.replace(/\b\w/g, c => c.toUpperCase());
   }
 
   prevMonth() {
