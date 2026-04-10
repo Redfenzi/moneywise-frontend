@@ -50,6 +50,23 @@ import { AuthService } from '../../core/services/auth.service';
                    [(ngModel)]="profile.email" required />
           </div>
 
+          <div class="form-group">
+            <label class="form-label">Devise</label>
+            <select class="form-input" name="currency" [(ngModel)]="profile.currency">
+              <option value="EUR">🇪🇺 Euro (EUR)</option>
+              <option value="USD">🇺🇸 Dollar américain (USD)</option>
+              <option value="GBP">🇬🇧 Livre sterling (GBP)</option>
+              <option value="CHF">🇨🇭 Franc suisse (CHF)</option>
+              <option value="CAD">🇨🇦 Dollar canadien (CAD)</option>
+              <option value="AUD">🇦🇺 Dollar australien (AUD)</option>
+              <option value="JPY">🇯🇵 Yen japonais (JPY)</option>
+              <option value="MAD">🇲🇦 Dirham marocain (MAD)</option>
+              <option value="DZD">🇩🇿 Dinar algérien (DZD)</option>
+              <option value="TND">🇹🇳 Dinar tunisien (TND)</option>
+              <option value="XOF">🌍 Franc CFA (XOF)</option>
+            </select>
+          </div>
+
           <div *ngIf="profileSuccess" class="alert alert-success">
             <span class="material-icons-round">check_circle</span>
             Profil mis à jour avec succès
@@ -431,7 +448,7 @@ import { AuthService } from '../../core/services/auth.service';
 export class ProfileComponent implements OnInit {
   currentUser = this.authService.currentUser;
 
-  profile = { firstName: '', lastName: '', email: '' };
+  profile = { firstName: '', lastName: '', email: '', currency: 'EUR' };
   passwords = { currentPassword: '', newPassword: '', confirmPassword: '' };
 
   profileLoading = false;
@@ -455,6 +472,7 @@ export class ProfileComponent implements OnInit {
         this.profile.firstName = res.firstName;
         this.profile.lastName = res.lastName;
         this.profile.email = res.email;
+        this.profile.currency = res.currency || 'EUR';
       }
     });
   }

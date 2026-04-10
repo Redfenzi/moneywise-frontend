@@ -65,6 +65,23 @@ import { AuthService } from '../../../core/services/auth.service';
           </div>
 
           <div class="form-group">
+            <label class="form-label">Devise</label>
+            <select class="form-control" formControlName="currency">
+              <option value="EUR">🇪🇺 Euro (EUR)</option>
+              <option value="USD">🇺🇸 Dollar américain (USD)</option>
+              <option value="GBP">🇬🇧 Livre sterling (GBP)</option>
+              <option value="CHF">🇨🇭 Franc suisse (CHF)</option>
+              <option value="CAD">🇨🇦 Dollar canadien (CAD)</option>
+              <option value="AUD">🇦🇺 Dollar australien (AUD)</option>
+              <option value="JPY">🇯🇵 Yen japonais (JPY)</option>
+              <option value="MAD">🇲🇦 Dirham marocain (MAD)</option>
+              <option value="DZD">🇩🇿 Dinar algérien (DZD)</option>
+              <option value="TND">🇹🇳 Dinar tunisien (TND)</option>
+              <option value="XOF">🌍 Franc CFA (XOF)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
             <label class="form-label">Mot de passe</label>
             <div class="input-with-icon">
               <span class="material-icons-round input-icon">lock</span>
@@ -123,6 +140,7 @@ export class RegisterComponent {
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       userType: ['INDIVIDUAL', Validators.required],
+      currency: ['EUR', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }

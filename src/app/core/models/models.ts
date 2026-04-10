@@ -5,6 +5,7 @@ export interface User {
   firstName: string;
   lastName: string;
   userType: 'INDIVIDUAL' | 'BUSINESS';
+  currency: string;
 }
 
 export interface AuthResponse {
@@ -14,6 +15,7 @@ export interface AuthResponse {
   firstName: string;
   lastName: string;
   userType: string;
+  currency: string;
 }
 
 export interface LoginRequest {
@@ -28,12 +30,14 @@ export interface RegisterRequest {
   firstName: string;
   lastName: string;
   userType: string;
+  currency: string;
 }
 
 export interface ProfileUpdateRequest {
   firstName: string;
   lastName: string;
   email: string;
+  currency: string;
 }
 
 export interface PasswordChangeRequest {
