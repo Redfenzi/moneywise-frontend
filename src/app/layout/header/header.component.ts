@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
+import { LanguageService } from '../../core/services/language.service';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -16,7 +17,17 @@ import { RouterLink } from '@angular/router';
       <div class="header-right">
         <div class="date-display">
           <span class="material-icons-round">calendar_today</span>
-          <span>{{ today | date:'EEEE d MMMM yyyy' : '' : 'fr' }}</span>
+          <span>{{ today | date:'EEEE d MMMM yyyy' : '' : lang.currentLang() }}</span>
+        </div>
+
+        <div class="lang-switcher">
+          <button class="lang-btn" [class.active]="lang.currentLang() === 'fr'" (click)="lang.setLanguage('fr')">
+            🇫🇷 FR
+          </button>
+          <span class="lang-sep">|</span>
+          <button class="lang-btn" [class.active]="lang.currentLang() === 'en'" (click)="lang.setLanguage('en')">
+            🇬🇧 EN
+          </button>
         </div>
 
         <div class="user-avatar" [attr.data-tooltip]="userName">
@@ -64,6 +75,41 @@ import { RouterLink } from '@angular/router';
       @media (max-width: 640px) { display: none; }
     }
 
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 8px;
+    }
+
+    .lang-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 6px;
+      transition: var(--transition);
+      font-family: 'Inter', sans-serif;
+
+      &:hover { color: var(--text-primary); }
+
+      &.active {
+        color: var(--primary-light);
+        font-weight: 700;
+      }
+    }
+
+    .lang-sep {
+      color: var(--border);
+      font-size: 0.75rem;
+    }
+
     .user-avatar {
       width: 40px;
       height: 40px;
@@ -90,7 +136,7 @@ export class HeaderComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
   today = new Date();
 
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService, public lang: LanguageService) {}
 
   get userInitials(): string {
     const user = this.auth.currentUser();
