@@ -454,6 +454,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   showPassword = signal(false);
   showIosModal = signal(false);
   private scrollY = 0;
+  private popstateHandler = () => {
+    if (this.showIosModal()) {
+      this.closeIosModal(false);
+    }
+  };
 
   lang = inject(LanguageService);
   private translate = inject(TranslateService);
@@ -470,11 +475,13 @@ export class LoginComponent implements OnInit, OnDestroy {
       document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
     }
+    window.addEventListener('popstate', this.popstateHandler);
   }
 
   ngOnDestroy() {
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
+    window.removeEventListener('popstate', this.popstateHandler);
   }
 
   openIosModal() {
@@ -487,10 +494,17 @@ export class LoginComponent implements OnInit, OnDestroy {
     document.body.style.top = `-${this.scrollY}px`;
     document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
+    // Pousse un état dans l'historique pour intercepter le bouton retour
+    history.pushState({ iosModal: true }, '');
     this.showIosModal.set(true);
   }
 
-  closeIosModal() {
+  closeIosModal(pushBack = true) {
+    if (pushBack) {
+      // Si fermé via bouton/overlay (pas via popstate), revenir en arrière
+      history.back();
+      return;
+    }
     this.showIosModal.set(false);
     // Restore scroll
     document.body.style.position = '';
