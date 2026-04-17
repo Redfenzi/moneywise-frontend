@@ -114,6 +114,7 @@ import { LanguageService } from '../../../core/services/language.service';
       <!-- Modal iOS instructions -->
       <div class="ios-modal-overlay" *ngIf="showIosModal()" (click)="showIosModal.set(false)">
         <div class="ios-modal" (click)="$event.stopPropagation()">
+          <div class="ios-modal-handle"></div>
           <button class="ios-modal-close" (click)="showIosModal.set(false)">
             <span class="material-icons-round">close</span>
           </button>
@@ -306,22 +307,26 @@ import { LanguageService } from '../../../core/services/language.service';
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      padding: 16px;
+      padding: 0;
       backdrop-filter: blur(4px);
     }
     .ios-modal {
       background: var(--bg-card);
-      border-radius: 24px;
-      padding: 28px 24px 24px;
+      border-radius: 24px 24px 0 0;
+      padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
       width: 100%;
-      max-width: 420px;
+      max-width: 100%;
+      max-height: 88dvh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       position: relative;
       border: 1px solid var(--border);
+      border-bottom: none;
     }
     .ios-modal-close {
       position: absolute;
-      top: 16px;
-      right: 16px;
+      top: 14px;
+      right: 14px;
       background: var(--bg-secondary);
       border: none;
       border-radius: 50%;
@@ -335,50 +340,60 @@ import { LanguageService } from '../../../core/services/language.service';
       .material-icons-round { font-size: 18px; }
       &:hover { color: var(--text-primary); }
     }
+    .ios-modal-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 0 auto 18px;
+    }
     .ios-modal-header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
     .ios-modal-icon-wrap {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
       background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 14px;
-      .material-icons-round { color: #fff; font-size: 28px; }
+      margin: 0 auto 12px;
+      .material-icons-round { color: #fff; font-size: 24px; }
     }
     .ios-modal-title {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--text-primary);
-      margin: 0 0 6px;
+      margin: 0 0 4px;
     }
     .ios-modal-subtitle {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
       margin: 0;
     }
     .ios-steps {
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      margin-bottom: 24px;
+      gap: 12px;
+      margin-bottom: 20px;
     }
     .ios-step {
       display: flex;
       align-items: flex-start;
-      gap: 14px;
+      gap: 12px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 12px;
     }
     .step-num {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       background: linear-gradient(135deg, #007AFF, #5856D6);
       color: #fff;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -389,15 +404,16 @@ import { LanguageService } from '../../../core/services/language.service';
       display: flex;
       flex-direction: column;
       gap: 2px;
-      padding-top: 2px;
+      padding-top: 1px;
       strong {
-        font-size: 0.875rem;
+        font-size: 0.85rem;
         color: var(--text-primary);
         font-weight: 600;
       }
       span {
-        font-size: 0.78rem;
+        font-size: 0.76rem;
         color: var(--text-muted);
+        line-height: 1.4;
       }
     }
     .ios-open-btn {
@@ -406,7 +422,7 @@ import { LanguageService } from '../../../core/services/language.service';
       justify-content: center;
       gap: 8px;
       width: 100%;
-      padding: 14px;
+      padding: 15px;
       background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
       color: #fff;
       border-radius: 14px;
