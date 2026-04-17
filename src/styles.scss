@@ -61,6 +61,8 @@ button, [role="button"] {
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  overscroll-behavior: none;
 }
 
 body {
@@ -69,7 +71,8 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
-  overscroll-behavior-x: none;
+  overscroll-behavior: none;
+  touch-action: pan-y;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
