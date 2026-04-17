@@ -322,7 +322,8 @@ import { LanguageService } from '../../../core/services/language.service';
       padding-bottom: max(36px, calc(20px + env(safe-area-inset-bottom, 0px)));
       width: 100%;
       max-width: 100%;
-      max-height: 90vh;
+      max-height: var(--modal-max-h, 90vh);
+      height: auto;
       overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
@@ -452,6 +453,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   error = signal('');
   showPassword = signal(false);
   showIosModal = signal(false);
+  private scrollY = 0;
 
   lang = inject(LanguageService);
   private translate = inject(TranslateService);
@@ -476,13 +478,26 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   openIosModal() {
-    this.showIosModal.set(true);
+    // Calcul de la hauteur réelle visible (fix iOS Safari vh bug)
+    const realH = window.innerHeight;
+    document.documentElement.style.setProperty('--modal-max-h', `${Math.floor(realH * 0.90)}px`);
+    // Scroll lock iOS-compatible (position:fixed sur body)
+    this.scrollY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${this.scrollY}px`;
+    document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
+    this.showIosModal.set(true);
   }
 
   closeIosModal() {
     this.showIosModal.set(false);
+    // Restore scroll
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
     document.body.style.overflow = '';
+    window.scrollTo(0, this.scrollY);
   }
 
   onSubmit() {
