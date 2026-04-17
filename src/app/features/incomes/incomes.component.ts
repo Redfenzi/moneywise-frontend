@@ -87,15 +87,15 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                     {{ income.description }}
                   </div>
                 </td>
-                <td><span class="badge badge-primary">{{ getTypeLabel(income.type) | translate }}</span></td>
-                <td><span class="amount positive">+{{ income.amount | appCurrency }}</span></td>
-                <td>{{ income.incomeDate | date:'dd/MM/yyyy' }}</td>
-                <td>
+                <td [attr.data-label]="'incomes.col_type' | translate"><span class="badge badge-primary">{{ getTypeLabel(income.type) | translate }}</span></td>
+                <td [attr.data-label]="'incomes.col_amount' | translate"><span class="amount positive">+{{ income.amount | appCurrency }}</span></td>
+                <td [attr.data-label]="'incomes.col_date' | translate">{{ income.incomeDate | date:'dd/MM/yyyy' }}</td>
+                <td [attr.data-label]="'incomes.col_status' | translate">
                   <span class="badge" [class.badge-success]="income.isFixedSalary" [class.badge-info]="!income.isFixedSalary">
                     {{ income.isFixedSalary ? ('incomes.status_fixed' | translate) : ('incomes.status_variable' | translate) }}
                   </span>
                 </td>
-                <td>
+                <td class="actions-cell">
                   <div class="flex flex-gap">
                     <button class="btn btn-icon" style="color: var(--primary-light);" (click)="editIncome(income)">
                       <span class="material-icons-round">edit</span>
@@ -233,6 +233,51 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
       border-width: 3px;
       border-color: var(--border);
       border-top-color: var(--primary);
+    }
+    @media (max-width: 640px) {
+      .card { overflow: visible; padding: 12px; }
+      .card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .type-filters {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .type-filters::-webkit-scrollbar { display: none; }
+      .table-container { border: none; border-radius: 0; overflow-x: visible; }
+      table { display: block; }
+      thead { display: none; }
+      tbody { display: flex; flex-direction: column; gap: 8px; }
+      tr {
+        display: block;
+        background: var(--bg-primary);
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+      }
+      td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.875rem;
+        gap: 8px;
+      }
+      td:last-child { border-bottom: none; }
+      td:first-child { padding: 12px; border-bottom: 1px solid var(--border); }
+      td[data-label]::before {
+        content: attr(data-label);
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+      .actions-cell { justify-content: flex-end; }
     }
   `]
 })
