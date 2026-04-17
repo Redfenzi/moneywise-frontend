@@ -234,7 +234,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
       border-color: var(--border);
       border-top-color: var(--primary);
     }
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
       .card { overflow: visible; padding: 12px; }
       .card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
       .type-filters {

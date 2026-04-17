@@ -114,6 +114,8 @@ a {
 
 .main-content {
   flex: 1;
+  min-width: 0;
+  overflow-x: hidden;
   margin-left: var(--sidebar-width);
   min-height: 100vh;
   background: var(--bg-primary);
