@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnInit, OnDestroy } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -203,7 +203,7 @@ import { LanguageService } from '../../../core/services/language.service';
     }
   `]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy {
   form: FormGroup;
   isNative = Capacitor.isNativePlatform();
   loading = signal(false);
@@ -218,6 +218,18 @@ export class LoginComponent {
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+  }
+
+  ngOnInit() {
+    if (this.isNative) {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  ngOnDestroy() {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
   }
 
   onSubmit() {
