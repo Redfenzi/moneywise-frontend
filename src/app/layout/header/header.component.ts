@@ -68,6 +68,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
     .mobile-menu {
       display: none;
+      color: var(--text-primary);
       @media (max-width: 1024px) { display: flex; }
     }
 
