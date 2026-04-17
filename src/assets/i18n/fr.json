@@ -25,7 +25,10 @@
       "no_account": "Pas encore de compte ?",
       "create_account": "Créer un compte",
       "error_invalid": "Identifiants invalides",
-      "forgot_password": "Mot de passe oublié ?"
+      "forgot_password": "Mot de passe oublié ?",
+      "download_app": "Télécharger l'application",
+      "download_android": "Disponible sur Android",
+      "download_desc": "Gérez vos finances partout avec l'app mobile"
     },
     "forgot": {
       "title": "Mot de passe oublié",

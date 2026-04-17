@@ -25,7 +25,10 @@
       "no_account": "Don't have an account?",
       "create_account": "Create an account",
       "error_invalid": "Invalid credentials",
-      "forgot_password": "Forgot password?"
+      "forgot_password": "Forgot password?",
+      "download_app": "Download the app",
+      "download_android": "Available on Android",
+      "download_desc": "Manage your finances anywhere with the mobile app"
     },
     "forgot": {
       "title": "Forgot password",

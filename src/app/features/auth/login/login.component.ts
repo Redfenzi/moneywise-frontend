@@ -85,6 +85,17 @@ import { LanguageService } from '../../../core/services/language.service';
           <a routerLink="/auth/register" style="color: var(--primary-light); font-weight:600;">{{ 'auth.login.create_account' | translate }}</a>
         </p>
       </div>
+
+      <a class="android-banner" href="https://github.com/Redfenzi/moneywise-frontend/releases/latest/download/app-debug.apk" download>
+        <div class="android-icon">
+          <span class="material-icons-round">android</span>
+        </div>
+        <div class="android-text">
+          <span class="android-label">{{ 'auth.login.download_app' | translate }}</span>
+          <span class="android-sub">{{ 'auth.login.download_android' | translate }}</span>
+        </div>
+        <span class="material-icons-round android-arrow">download</span>
+      </a>
     </div>
   `,
   styles: [`
@@ -127,6 +138,55 @@ import { LanguageService } from '../../../core/services/language.service';
       .material-icons-round { font-size: 20px; }
     }
     .input-with-icon { position: relative; }
+    .android-banner {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 20px;
+      padding: 14px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      text-decoration: none;
+      transition: var(--transition);
+      cursor: pointer;
+      &:hover {
+        border-color: #3ddc84;
+        box-shadow: 0 4px 16px rgba(61, 220, 132, 0.15);
+        transform: translateY(-1px);
+      }
+    }
+    .android-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #3ddc84 0%, #00c853 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      .material-icons-round { color: #fff; font-size: 24px; }
+    }
+    .android-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .android-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .android-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .android-arrow {
+      color: #3ddc84;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
   `]
 })
 export class LoginComponent {
