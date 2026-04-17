@@ -28,7 +28,19 @@
       "forgot_password": "Forgot password?",
       "download_app": "Download the app",
       "download_android": "Available on Android",
-      "download_desc": "Manage your finances anywhere with the mobile app"
+      "download_desc": "Manage your finances anywhere with the mobile app",
+      "ios_install_label": "Install on iOS",
+      "ios_install_sub": "iPhone / iPad",
+      "ios_modal_title": "Install on iOS",
+      "ios_modal_subtitle": "Add MoneyWise to your home screen",
+      "ios_step1_title": "Open Safari",
+      "ios_step1_desc": "Not Chrome or another browser",
+      "ios_step2_title": "Tap Share ↑",
+      "ios_step2_desc": "The square button with an arrow at the bottom of the screen",
+      "ios_step3_title": "\u201cAdd to Home Screen\u201d",
+      "ios_step3_desc": "Scroll the menu and tap it",
+      "ios_step4_title": "Tap \u201cAdd\u201d",
+      "ios_step4_desc": "MoneyWise appears like a real app!"
     },
     "forgot": {
       "title": "Forgot password",

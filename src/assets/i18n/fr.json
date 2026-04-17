@@ -28,7 +28,19 @@
       "forgot_password": "Mot de passe oublié ?",
       "download_app": "Télécharger l'application",
       "download_android": "Disponible sur Android",
-      "download_desc": "Gérez vos finances partout avec l'app mobile"
+      "download_desc": "Gérez vos finances partout avec l'app mobile",
+      "ios_install_label": "Installer sur iOS",
+      "ios_install_sub": "iPhone / iPad",
+      "ios_modal_title": "Installer sur iOS",
+      "ios_modal_subtitle": "Ajoutez MoneyWise à votre écran d'accueil",
+      "ios_step1_title": "Ouvrez Safari",
+      "ios_step1_desc": "Pas Chrome ou autre navigateur",
+      "ios_step2_title": "Appuyez sur Partager ↑",
+      "ios_step2_desc": "Le bouton carré avec une flèche en bas de l'écran",
+      "ios_step3_title": "\u00ab Sur l'écran d'accueil \u00bb",
+      "ios_step3_desc": "Faites défiler le menu et appuyez dessus",
+      "ios_step4_title": "Appuyez sur \u00ab Ajouter \u00bb",
+      "ios_step4_desc": "MoneyWise apparaît comme une vraie app !"
     },
     "forgot": {
       "title": "Mot de passe oublié",

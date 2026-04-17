@@ -104,8 +104,8 @@ import { LanguageService } from '../../../core/services/language.service';
             <span class="material-icons-round">phone_iphone</span>
           </div>
           <div class="banner-text">
-            <span class="banner-label">Installer sur iOS</span>
-            <span class="banner-sub">iPhone / iPad</span>
+            <span class="banner-label">{{ 'auth.login.ios_install_label' | translate }}</span>
+            <span class="banner-sub">{{ 'auth.login.ios_install_sub' | translate }}</span>
           </div>
           <span class="material-icons-round ios-arrow">info_outline</span>
         </button>
@@ -122,36 +122,36 @@ import { LanguageService } from '../../../core/services/language.service';
             <div class="ios-modal-icon-wrap">
               <span class="material-icons-round">phone_iphone</span>
             </div>
-            <h3 class="ios-modal-title">Installer sur iOS</h3>
-            <p class="ios-modal-subtitle">Ajoutez MoneyWise à votre écran d'accueil</p>
+            <h3 class="ios-modal-title">{{ 'auth.login.ios_modal_title' | translate }}</h3>
+            <p class="ios-modal-subtitle">{{ 'auth.login.ios_modal_subtitle' | translate }}</p>
           </div>
           <div class="ios-steps">
             <div class="ios-step">
               <div class="step-num">1</div>
               <div class="step-text">
-                <strong>Ouvrez Safari</strong>
-                <span>Pas Chrome ou autre navigateur</span>
+                <strong>{{ 'auth.login.ios_step1_title' | translate }}</strong>
+                <span>{{ 'auth.login.ios_step1_desc' | translate }}</span>
               </div>
             </div>
             <div class="ios-step">
               <div class="step-num">2</div>
               <div class="step-text">
-                <strong>Appuyez sur Partager ↑</strong>
-                <span>Le bouton carré avec une flèche en bas de l'écran</span>
+                <strong>{{ 'auth.login.ios_step2_title' | translate }}</strong>
+                <span>{{ 'auth.login.ios_step2_desc' | translate }}</span>
               </div>
             </div>
             <div class="ios-step">
               <div class="step-num">3</div>
               <div class="step-text">
-                <strong>« Sur l'écran d'accueil »</strong>
-                <span>Faites défiler le menu et appuyez dessus</span>
+                <strong>{{ 'auth.login.ios_step3_title' | translate }}</strong>
+                <span>{{ 'auth.login.ios_step3_desc' | translate }}</span>
               </div>
             </div>
             <div class="ios-step">
               <div class="step-num">4</div>
               <div class="step-text">
-                <strong>Appuyez sur « Ajouter »</strong>
-                <span>MoneyWise apparaît comme une vraie app !</span>
+                <strong>{{ 'auth.login.ios_step4_title' | translate }}</strong>
+                <span>{{ 'auth.login.ios_step4_desc' | translate }}</span>
               </div>
             </div>
           </div>
