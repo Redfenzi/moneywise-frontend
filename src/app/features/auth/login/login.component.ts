@@ -155,10 +155,14 @@ import { LanguageService } from '../../../core/services/language.service';
               </div>
             </div>
           </div>
-          <a href="https://redmoneywise.netlify.app" class="ios-open-btn" target="_blank">
-            <span class="material-icons-round">open_in_new</span>
-            Ouvrir dans Safari
-          </a>
+          <button class="ios-open-btn" (click)="shareApp()" *ngIf="!shareSuccess()">
+            <span class="material-icons-round">ios_share</span>
+            Partager l'app
+          </button>
+          <div class="ios-share-success" *ngIf="shareSuccess()">
+            <span class="material-icons-round">check_circle</span>
+            Ouvre l'icône sur ton écran d'accueil !
+          </div>
         </div>
       </div>
 
@@ -446,8 +450,28 @@ import { LanguageService } from '../../../core/services/language.service';
       font-weight: 600;
       transition: var(--transition);
       box-sizing: border-box;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
       .material-icons-round { font-size: 18px; }
       &:hover { opacity: 0.9; transform: translateY(-1px); }
+    }
+    .ios-share-success {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      color: #fff;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-sizing: border-box;
+      .material-icons-round { font-size: 20px; }
+    }
     }
   `]
 })
@@ -458,6 +482,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   error = signal('');
   showPassword = signal(false);
   showIosModal = signal(false);
+  shareSuccess = signal(false);
   private scrollY = 0;
   private popstateHandler = () => {
     if (this.showIosModal()) {
@@ -490,6 +515,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   openIosModal() {
+    this.shareSuccess.set(false);
     // Calcul de la hauteur réelle visible (fix iOS Safari vh bug)
     const realH = window.innerHeight;
     document.documentElement.style.setProperty('--modal-max-h', `${Math.floor(realH * 0.90)}px`);
@@ -517,6 +543,21 @@ export class LoginComponent implements OnInit, OnDestroy {
     document.body.style.width = '';
     document.body.style.overflow = '';
     window.scrollTo(0, this.scrollY);
+  }
+
+  async shareApp() {
+    const url = 'https://redmoneywise.netlify.app';
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'MoneyWise', text: 'Gère tes finances avec MoneyWise', url });
+        this.shareSuccess.set(true);
+      } catch {
+        // annulé par l’utilisateur, ne rien faire
+      }
+    } else {
+      // Fallback navigateurs sans Web Share API
+      window.open(url, '_blank');
+    }
   }
 
   onSubmit() {
