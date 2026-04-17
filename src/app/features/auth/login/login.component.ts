@@ -349,6 +349,8 @@ import { LanguageService } from '../../../core/services/language.service';
       justify-content: center;
       cursor: pointer;
       color: var(--text-muted);
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
       .material-icons-round { font-size: 18px; }
       &:hover { color: var(--text-primary); }
     }
