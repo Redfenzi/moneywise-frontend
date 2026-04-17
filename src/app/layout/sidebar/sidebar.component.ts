@@ -44,7 +44,7 @@ interface NavItem {
     .sidebar {
       position: fixed;
       left: 0;
-      top: 0;
+      top: env(safe-area-inset-top, 0px);
       bottom: 0;
       width: var(--sidebar-width);
       background: var(--bg-secondary);
