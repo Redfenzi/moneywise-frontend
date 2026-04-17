@@ -32,7 +32,7 @@ import { LanguageService } from '../../../core/services/language.service';
           </button>
         </div>
 
-        <div style="text-align:center; margin-bottom: 32px;">
+        <div style="text-align:center; margin-bottom: 20px;">
           <h2 style="font-size:1.5rem; margin-bottom:8px;">{{ 'auth.login.title' | translate }}</h2>
           <p style="font-size:0.875rem;">{{ 'auth.login.subtitle' | translate }}</p>
         </div>
@@ -82,7 +82,7 @@ import { LanguageService } from '../../../core/services/language.service';
           </button>
         </form>
 
-        <p style="text-align:center; margin-top: 24px; font-size:0.875rem; color: var(--text-muted);">
+        <p style="text-align:center; margin-top: 16px; font-size:0.875rem; color: var(--text-muted);">
           {{ 'auth.login.no_account' | translate }}
           <a routerLink="/auth/register" style="color: var(--primary-light); font-weight:600;">{{ 'auth.login.create_account' | translate }}</a>
         </p>
@@ -107,7 +107,7 @@ import { LanguageService } from '../../../core/services/language.service';
       justify-content: center;
       align-items: center;
       gap: 4px;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
     .lang-btn {
       background: none;

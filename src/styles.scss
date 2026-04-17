@@ -361,7 +361,7 @@ a {
 
 // ===== FORMS =====
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .form-label {
@@ -888,7 +888,7 @@ table {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--border-radius-lg);
-  padding: 48px;
+  padding: 32px;
   width: 100%;
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.4);
   position: relative;
@@ -900,7 +900,7 @@ table {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
   justify-content: center;
 
   .logo-icon {
