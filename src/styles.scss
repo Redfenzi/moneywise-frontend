@@ -858,7 +858,8 @@ table {
   justify-content: center;
   background: var(--bg-primary);
   position: relative;
-  overflow: hidden;
+  padding: 40px 16px;
+  box-sizing: border-box;
 
   &::before {
     content: '';
@@ -889,7 +890,6 @@ table {
   border-radius: var(--border-radius-lg);
   padding: 48px;
   width: 100%;
-  max-width: 480px;
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.4);
   position: relative;
   z-index: 1;
