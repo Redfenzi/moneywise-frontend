@@ -88,16 +88,79 @@ import { LanguageService } from '../../../core/services/language.service';
         </p>
       </div>
 
-      <a *ngIf="!isNative" class="android-banner" href="https://github.com/Redfenzi/moneywise-frontend/releases/latest/download/MoneyWise.apk" download>
-        <div class="android-icon">
-          <span class="material-icons-round">android</span>
+      <div *ngIf="!isNative" class="app-banners">
+        <a class="app-banner android-banner" href="https://github.com/Redfenzi/moneywise-frontend/releases/latest/download/MoneyWise.apk" download>
+          <div class="banner-icon android-icon">
+            <span class="material-icons-round">android</span>
+          </div>
+          <div class="banner-text">
+            <span class="banner-label">{{ 'auth.login.download_app' | translate }}</span>
+            <span class="banner-sub">{{ 'auth.login.download_android' | translate }}</span>
+          </div>
+          <span class="material-icons-round android-arrow">download</span>
+        </a>
+        <button class="app-banner ios-banner" (click)="showIosModal.set(true)">
+          <div class="banner-icon ios-icon">
+            <span class="material-icons-round">phone_iphone</span>
+          </div>
+          <div class="banner-text">
+            <span class="banner-label">Installer sur iOS</span>
+            <span class="banner-sub">iPhone / iPad</span>
+          </div>
+          <span class="material-icons-round ios-arrow">info_outline</span>
+        </button>
+      </div>
+
+      <!-- Modal iOS instructions -->
+      <div class="ios-modal-overlay" *ngIf="showIosModal()" (click)="showIosModal.set(false)">
+        <div class="ios-modal" (click)="$event.stopPropagation()">
+          <button class="ios-modal-close" (click)="showIosModal.set(false)">
+            <span class="material-icons-round">close</span>
+          </button>
+          <div class="ios-modal-header">
+            <div class="ios-modal-icon-wrap">
+              <span class="material-icons-round">phone_iphone</span>
+            </div>
+            <h3 class="ios-modal-title">Installer sur iOS</h3>
+            <p class="ios-modal-subtitle">Ajoutez MoneyWise à votre écran d'accueil</p>
+          </div>
+          <div class="ios-steps">
+            <div class="ios-step">
+              <div class="step-num">1</div>
+              <div class="step-text">
+                <strong>Ouvrez Safari</strong>
+                <span>Pas Chrome ou autre navigateur</span>
+              </div>
+            </div>
+            <div class="ios-step">
+              <div class="step-num">2</div>
+              <div class="step-text">
+                <strong>Appuyez sur Partager ↑</strong>
+                <span>Le bouton carré avec une flèche en bas de l'écran</span>
+              </div>
+            </div>
+            <div class="ios-step">
+              <div class="step-num">3</div>
+              <div class="step-text">
+                <strong>« Sur l'écran d'accueil »</strong>
+                <span>Faites défiler le menu et appuyez dessus</span>
+              </div>
+            </div>
+            <div class="ios-step">
+              <div class="step-num">4</div>
+              <div class="step-text">
+                <strong>Appuyez sur « Ajouter »</strong>
+                <span>MoneyWise apparaît comme une vraie app !</span>
+              </div>
+            </div>
+          </div>
+          <a href="https://redmoneywise.netlify.app" class="ios-open-btn" target="_blank">
+            <span class="material-icons-round">open_in_new</span>
+            Ouvrir dans Safari
+          </a>
         </div>
-        <div class="android-text">
-          <span class="android-label">{{ 'auth.login.download_app' | translate }}</span>
-          <span class="android-sub">{{ 'auth.login.download_android' | translate }}</span>
-        </div>
-        <span class="material-icons-round android-arrow">download</span>
-      </a>
+      </div>
+
       </div>
     </div>
   `,
@@ -152,54 +215,205 @@ import { LanguageService } from '../../../core/services/language.service';
       .material-icons-round { font-size: 20px; }
     }
     .input-with-icon { position: relative; }
-    .android-banner {
+    .app-banners {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .app-banner {
+      flex: 1;
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-top: 20px;
-      padding: 14px 20px;
+      gap: 10px;
+      padding: 12px 14px;
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 16px;
       text-decoration: none;
       transition: var(--transition);
       cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+    .android-banner {
       &:hover {
         border-color: #3ddc84;
         box-shadow: 0 4px 16px rgba(61, 220, 132, 0.15);
         transform: translateY(-1px);
       }
     }
-    .android-icon {
-      width: 44px;
-      height: 44px;
+    .ios-banner {
+      background: var(--bg-card);
+      &:hover {
+        border-color: #007AFF;
+        box-shadow: 0 4px 16px rgba(0, 122, 255, 0.15);
+        transform: translateY(-1px);
+      }
+    }
+    .banner-icon {
+      width: 40px;
+      height: 40px;
       border-radius: 12px;
-      background: linear-gradient(135deg, #3ddc84 0%, #00c853 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      .material-icons-round { color: #fff; font-size: 24px; }
+      .material-icons-round { color: #fff; font-size: 22px; }
     }
-    .android-text {
+    .android-icon {
+      background: linear-gradient(135deg, #3ddc84 0%, #00c853 100%);
+    }
+    .ios-icon {
+      background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+    }
+    .banner-text {
       flex: 1;
       display: flex;
       flex-direction: column;
       gap: 2px;
+      min-width: 0;
     }
-    .android-label {
-      font-size: 0.875rem;
+    .banner-label {
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .android-sub {
-      font-size: 0.75rem;
+    .banner-sub {
+      font-size: 0.7rem;
       color: var(--text-muted);
     }
     .android-arrow {
       color: #3ddc84;
-      font-size: 22px;
+      font-size: 20px;
       flex-shrink: 0;
+    }
+    .ios-arrow {
+      color: #007AFF;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    /* iOS Modal */
+    .ios-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px;
+      backdrop-filter: blur(4px);
+    }
+    .ios-modal {
+      background: var(--bg-card);
+      border-radius: 24px;
+      padding: 28px 24px 24px;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      border: 1px solid var(--border);
+    }
+    .ios-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--bg-secondary);
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-muted);
+      .material-icons-round { font-size: 18px; }
+      &:hover { color: var(--text-primary); }
+    }
+    .ios-modal-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .ios-modal-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      .material-icons-round { color: #fff; font-size: 28px; }
+    }
+    .ios-modal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .ios-modal-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+    .ios-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .ios-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #007AFF, #5856D6);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-top: 2px;
+      strong {
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+      span {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+    }
+    .ios-open-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+      color: #fff;
+      border-radius: 14px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: var(--transition);
+      box-sizing: border-box;
+      .material-icons-round { font-size: 18px; }
+      &:hover { opacity: 0.9; transform: translateY(-1px); }
     }
   `]
 })
@@ -209,6 +423,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   loading = signal(false);
   error = signal('');
   showPassword = signal(false);
+  showIosModal = signal(false);
 
   lang = inject(LanguageService);
   private translate = inject(TranslateService);
