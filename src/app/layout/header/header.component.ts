@@ -207,6 +207,8 @@ import { TranslateModule } from '@ngx-translate/core';
     }
 
     .dropdown-item--danger {
+      color: #ef4444;
+
       &:hover {
         background: rgba(239, 68, 68, 0.1);
         color: #ef4444;
@@ -229,7 +231,6 @@ export class HeaderComponent {
   logout() {
     this.dropdownOpen = false;
     this.auth.logout();
-    this.router.navigate(['/login']);
   }
 
   get todayLabel(): string {
