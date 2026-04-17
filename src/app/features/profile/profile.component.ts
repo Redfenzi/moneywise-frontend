@@ -237,6 +237,10 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
     }
 
     .form-group {
@@ -253,6 +257,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     }
 
     .form-input {
+      width: 100%;
+      box-sizing: border-box;
       padding: 10px 14px;
       background: var(--bg-secondary);
       border: 1px solid var(--border);
