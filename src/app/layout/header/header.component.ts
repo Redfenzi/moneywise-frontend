@@ -68,7 +68,18 @@ import { TranslateModule } from '@ngx-translate/core';
 
     .mobile-menu {
       display: none;
-      color: var(--text-primary);
+      color: var(--primary-light);
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(108, 99, 255, 0.25);
+      transition: var(--transition);
+
+      &:hover {
+        box-shadow: 0 6px 18px rgba(108, 99, 255, 0.4);
+        transform: translateY(-1px);
+      }
+
       @media (max-width: 1024px) { display: flex; }
     }
 
