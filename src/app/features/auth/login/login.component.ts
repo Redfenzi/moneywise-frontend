@@ -1,4 +1,5 @@
 import { Component, signal, inject } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -87,7 +88,7 @@ import { LanguageService } from '../../../core/services/language.service';
         </p>
       </div>
 
-      <a class="android-banner" href="https://github.com/Redfenzi/moneywise-frontend/releases/latest/download/MoneyWise.apk" download>
+      <a *ngIf="!isNative" class="android-banner" href="https://github.com/Redfenzi/moneywise-frontend/releases/latest/download/MoneyWise.apk" download>
         <div class="android-icon">
           <span class="material-icons-round">android</span>
         </div>
@@ -204,6 +205,7 @@ import { LanguageService } from '../../../core/services/language.service';
 })
 export class LoginComponent {
   form: FormGroup;
+  isNative = Capacitor.isNativePlatform();
   loading = signal(false);
   error = signal('');
   showPassword = signal(false);
