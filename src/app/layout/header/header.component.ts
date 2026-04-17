@@ -1,13 +1,14 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { LanguageService } from '../../core/services/language.service';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   template: `
     <header class="app-header">
       <button class="btn btn-icon mobile-menu" (click)="toggleSidebar.emit()">
@@ -30,8 +31,23 @@ import { RouterLink } from '@angular/router';
           </button>
         </div>
 
-        <div class="user-avatar" [attr.data-tooltip]="userName">
-          {{ userInitials }}
+        <div class="user-menu-wrapper" (click)="$event.stopPropagation()">
+          <div class="user-avatar" (click)="toggleDropdown()">
+            {{ userInitials }}
+          </div>
+          <div class="user-dropdown" *ngIf="dropdownOpen">
+            <div class="user-dropdown-header">
+              <span class="user-dropdown-name">{{ userName }}</span>
+            </div>
+            <button class="dropdown-item" routerLink="/profile" (click)="dropdownOpen = false">
+              <span class="material-icons-round">person</span>
+              {{ 'nav.profile' | translate }}
+            </button>
+            <button class="dropdown-item dropdown-item--danger" (click)="logout()">
+              <span class="material-icons-round">logout</span>
+              {{ 'nav.logout' | translate }}
+            </button>
+          </div>
         </div>
       </div>
     </header>
@@ -110,6 +126,10 @@ import { RouterLink } from '@angular/router';
       font-size: 0.75rem;
     }
 
+    .user-menu-wrapper {
+      position: relative;
+    }
+
     .user-avatar {
       width: 40px;
       height: 40px;
@@ -130,13 +150,87 @@ import { RouterLink } from '@angular/router';
         box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
       }
     }
+
+    .user-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      min-width: 200px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      z-index: 200;
+      animation: fadeInDown 0.15s ease;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .user-dropdown-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .user-dropdown-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 11px 16px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+
+      .material-icons-round { font-size: 18px; }
+
+      &:hover {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+      }
+
+    }
+
+    .dropdown-item--danger {
+      &:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+    }
   `]
 })
 export class HeaderComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
   today = new Date();
+  dropdownOpen = false;
 
-  constructor(public auth: AuthService, public lang: LanguageService) {}
+  constructor(public auth: AuthService, public lang: LanguageService, private router: Router) {}
+
+  @HostListener('document:click')
+  closeDropdown() { this.dropdownOpen = false; }
+
+  toggleDropdown() { this.dropdownOpen = !this.dropdownOpen; }
+
+  logout() {
+    this.dropdownOpen = false;
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
 
   get todayLabel(): string {
     const locale = this.lang.currentLang();
