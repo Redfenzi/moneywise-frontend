@@ -453,7 +453,7 @@ import { LanguageService } from '../../../core/services/language.service';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   form: FormGroup;
-  isNative = Capacitor.isNativePlatform();
+  isNative = Capacitor.isNativePlatform() || window.matchMedia('(display-mode: standalone)').matches;
   loading = signal(false);
   error = signal('');
   showPassword = signal(false);
