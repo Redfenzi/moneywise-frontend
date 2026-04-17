@@ -86,7 +86,7 @@ import { LanguageService } from '../../../core/services/language.service';
         </p>
       </div>
 
-      <a class="android-banner" href="https://github.com/Redfenzi/moneywise-frontend/releases/latest/download/app-debug.apk" download>
+      <a class="android-banner" href="https://github.com/Redfenzi/moneywise-frontend/releases/latest/download/MoneyWise.apk" download>
         <div class="android-icon">
           <span class="material-icons-round">android</span>
         </div>
