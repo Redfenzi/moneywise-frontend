@@ -156,6 +156,7 @@ import { TranslateModule } from '@ngx-translate/core';
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
       transition: var(--transition);
+      overflow: hidden;
 
       &:hover {
         transform: scale(1.05);
