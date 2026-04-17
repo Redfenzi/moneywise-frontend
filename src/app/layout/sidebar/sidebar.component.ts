@@ -35,13 +35,6 @@ interface NavItem {
         </a>
       </nav>
 
-      <div class="sidebar-footer">
-        <button class="nav-item logout" (click)="auth.logout()">
-          <span class="material-icons-round nav-icon">logout</span>
-          <span class="nav-label" *ngIf="!collapsed">{{ 'nav.logout' | translate }}</span>
-        </button>
-      </div>
-
       <button class="collapse-btn" (click)="toggle.emit()">
         <span class="material-icons-round">{{ collapsed ? 'chevron_right' : 'chevron_left' }}</span>
       </button>
@@ -163,11 +156,6 @@ interface NavItem {
       }
     }
 
-    .sidebar-footer {
-      padding: 12px;
-      border-top: 1px solid var(--border);
-    }
-
     .collapse-btn {
       position: absolute;
       bottom: 80px;
@@ -220,7 +208,6 @@ export class SidebarComponent {
     { label: 'nav.expenses',     icon: 'shopping_cart',   route: '/expenses' },
     { label: 'nav.subscriptions',icon: 'subscriptions',   route: '/subscriptions' },
     { label: 'nav.bank_accounts',icon: 'account_balance', route: '/bank-accounts' },
-    { label: 'nav.profile',      icon: 'manage_accounts', route: '/profile' },
   ];
 
   constructor(public auth: AuthService) {}
