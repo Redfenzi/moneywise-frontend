@@ -247,6 +247,8 @@ import { LanguageService } from '../../../core/services/language.service';
     }
     .ios-banner {
       background: var(--bg-card);
+      justify-content: flex-start;
+      text-align: left;
       &:hover {
         border-color: #007AFF;
         box-shadow: 0 4px 16px rgba(0, 122, 255, 0.15);
