@@ -99,7 +99,7 @@ import { LanguageService } from '../../../core/services/language.service';
           </div>
           <span class="material-icons-round android-arrow">download</span>
         </a>
-        <button class="app-banner ios-banner" (click)="showIosModal.set(true)">
+        <button class="app-banner ios-banner" (click)="openIosModal()">
           <div class="banner-icon ios-icon">
             <span class="material-icons-round">phone_iphone</span>
           </div>
@@ -112,10 +112,10 @@ import { LanguageService } from '../../../core/services/language.service';
       </div>
 
       <!-- Modal iOS instructions -->
-      <div class="ios-modal-overlay" *ngIf="showIosModal()" (click)="showIosModal.set(false)">
+      <div class="ios-modal-overlay" *ngIf="showIosModal()" (click)="closeIosModal()">
         <div class="ios-modal" (click)="$event.stopPropagation()">
           <div class="ios-modal-handle"></div>
-          <button class="ios-modal-close" (click)="showIosModal.set(false)">
+          <button class="ios-modal-close" (click)="closeIosModal()">
             <span class="material-icons-round">close</span>
           </button>
           <div class="ios-modal-header">
@@ -301,27 +301,36 @@ import { LanguageService } from '../../../core/services/language.service';
     /* iOS Modal */
     .ios-modal-overlay {
       position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       inset: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 1000;
+      background: rgba(0,0,0,0.75);
+      z-index: 9999;
       display: flex;
       align-items: flex-end;
       justify-content: center;
       padding: 0;
       backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
     }
     .ios-modal {
       background: var(--bg-card);
       border-radius: 24px 24px 0 0;
-      padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+      padding: 20px 20px 36px;
+      padding-bottom: max(36px, calc(20px + env(safe-area-inset-bottom, 0px)));
       width: 100%;
       max-width: 100%;
-      max-height: 88dvh;
+      max-height: 90vh;
       overflow-y: auto;
+      overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
       position: relative;
       border: 1px solid var(--border);
       border-bottom: none;
+      box-sizing: border-box;
     }
     .ios-modal-close {
       position: absolute;
@@ -463,6 +472,16 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+  }
+
+  openIosModal() {
+    this.showIosModal.set(true);
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeIosModal() {
+    this.showIosModal.set(false);
     document.body.style.overflow = '';
   }
 
