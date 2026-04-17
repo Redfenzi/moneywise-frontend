@@ -74,6 +74,8 @@ import { TranslateModule } from '@ngx-translate/core';
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(108, 99, 255, 0.25);
       transition: var(--transition);
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
 
       &:hover {
         box-shadow: 0 6px 18px rgba(108, 99, 255, 0.4);
