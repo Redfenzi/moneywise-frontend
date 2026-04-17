@@ -88,7 +88,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                 <td [attr.data-label]="'expenses.col_category' | translate"><span class="category-pill">{{ getCategoryLabel(expense.category) | translate }}</span></td>
                 <td [attr.data-label]="'expenses.col_amount' | translate"><span class="amount negative">-{{ expense.amount | appCurrency }}</span></td>
                 <td [attr.data-label]="'expenses.col_date' | translate">{{ expense.expenseDate | date:'dd/MM/yyyy' }}</td>
-                <td class="actions-cell">
+                <td class="actions-cell" [attr.data-label]="'expenses.col_actions' | translate">
                   <div class="flex flex-gap">
                     <button class="btn btn-icon" style="color: var(--primary-light);" (click)="editExpense(expense)">
                       <span class="material-icons-round">edit</span>
@@ -228,7 +228,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
         flex-shrink: 0;
         white-space: nowrap;
       }
-      .actions-cell { justify-content: flex-end; }
+      .actions-cell { justify-content: space-between; }
     }
   `]
 })

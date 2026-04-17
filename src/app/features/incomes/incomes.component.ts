@@ -95,7 +95,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                     {{ income.isFixedSalary ? ('incomes.status_fixed' | translate) : ('incomes.status_variable' | translate) }}
                   </span>
                 </td>
-                <td class="actions-cell">
+                <td class="actions-cell" [attr.data-label]="'incomes.col_actions' | translate">
                   <div class="flex flex-gap">
                     <button class="btn btn-icon" style="color: var(--primary-light);" (click)="editIncome(income)">
                       <span class="material-icons-round">edit</span>
@@ -277,7 +277,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
         flex-shrink: 0;
         white-space: nowrap;
       }
-      .actions-cell { justify-content: flex-end; }
+      .actions-cell { justify-content: space-between; }
     }
   `]
 })
