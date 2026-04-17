@@ -1,4 +1,5 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnInit, OnDestroy } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -155,7 +156,7 @@ import { LanguageService } from '../../../core/services/language.service';
     }
   `]
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit, OnDestroy {
   form: FormGroup;
   loading = signal(false);
   error = signal('');
@@ -176,6 +177,18 @@ export class RegisterComponent {
       currency: ['EUR', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+  }
+
+  ngOnInit() {
+    if (Capacitor.isNativePlatform()) {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  ngOnDestroy() {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
   }
 
   onSubmit() {

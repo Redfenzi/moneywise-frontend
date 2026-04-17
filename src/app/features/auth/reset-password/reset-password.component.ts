@@ -1,4 +1,5 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit, OnDestroy } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -187,7 +188,7 @@ import { LanguageService } from '../../../core/services/language.service';
     @keyframes spin { to { transform: rotate(360deg); } }
   `]
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent implements OnInit, OnDestroy {
   form: FormGroup;
   loading = signal(false);
   success = signal(false);
@@ -213,6 +214,10 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (Capacitor.isNativePlatform()) {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    }
     this.token = this.route.snapshot.queryParamMap.get('token') ?? '';
     this.browserKey = localStorage.getItem('mw_reset_browser_key') ?? '';
 
@@ -223,6 +228,11 @@ export class ResetPasswordComponent implements OnInit {
     if (!this.browserKey) {
       this.linkError.set('Ce lien ne peut être utilisé que depuis le navigateur qui a effectué la demande.');
     }
+  }
+
+  ngOnDestroy() {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
   }
 
   passwordMatchValidator(group: FormGroup) {

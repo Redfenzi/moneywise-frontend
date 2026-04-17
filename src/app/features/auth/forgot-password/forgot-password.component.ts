@@ -1,4 +1,5 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnInit, OnDestroy } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -156,7 +157,7 @@ import { LanguageService } from '../../../core/services/language.service';
     @keyframes spin { to { transform: rotate(360deg); } }
   `]
 })
-export class ForgotPasswordComponent {
+export class ForgotPasswordComponent implements OnInit, OnDestroy {
   form: FormGroup;
   loading = signal(false);
   success = signal(false);
@@ -170,6 +171,18 @@ export class ForgotPasswordComponent {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
+  }
+
+  ngOnInit() {
+    if (Capacitor.isNativePlatform()) {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  ngOnDestroy() {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
   }
 
   onSubmit() {
