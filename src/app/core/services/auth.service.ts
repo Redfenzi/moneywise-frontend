@@ -9,9 +9,8 @@ import { environment } from '../../../environments/environment';
 export class AuthService {
   private readonly API = `${environment.apiUrl}/auth`;
   private readonly TOKEN_KEY = 'mw_token';
-  private readonly USER_KEY = 'mw_user';
 
-  currentUser = signal<AuthResponse | null>(this.loadUser());
+  currentUser = signal<AuthResponse | null>(null);
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -29,7 +28,6 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.USER_KEY);
     this.currentUser.set(null);
     this.router.navigate(['/auth/login']);
   }
@@ -44,12 +42,6 @@ export class AuthService {
 
   private saveSession(res: AuthResponse) {
     localStorage.setItem(this.TOKEN_KEY, res.token);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(res));
     this.currentUser.set(res);
-  }
-
-  private loadUser(): AuthResponse | null {
-    const raw = localStorage.getItem(this.USER_KEY);
-    return raw ? JSON.parse(raw) : null;
   }
 }
