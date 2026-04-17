@@ -219,14 +219,14 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
       document.body.style.overflow = 'hidden';
     }
     this.token = this.route.snapshot.queryParamMap.get('token') ?? '';
-    this.browserKey = localStorage.getItem('mw_reset_browser_key') ?? '';
+    this.browserKey = this.route.snapshot.queryParamMap.get('bk') ?? '';
 
     if (!this.token) {
       this.linkError.set('Lien de réinitialisation manquant.');
       return;
     }
     if (!this.browserKey) {
-      this.linkError.set('Ce lien ne peut être utilisé que depuis le navigateur qui a effectué la demande.');
+      this.linkError.set('Lien invalide ou incomplet.');
     }
   }
 
@@ -248,7 +248,6 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 
     this.api.resetPassword(this.token, this.browserKey, this.form.value.newPassword).subscribe({
       next: () => {
-        localStorage.removeItem('mw_reset_browser_key');
         this.loading.set(false);
         this.success.set(true);
         setTimeout(() => this.router.navigate(['/auth/login']), 3000);

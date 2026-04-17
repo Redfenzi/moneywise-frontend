@@ -191,9 +191,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     this.error.set('');
 
     this.api.forgotPassword(this.form.value.email).subscribe({
-      next: (res) => {
-        // Stocker le browserKey dans localStorage — lie la demande à CE navigateur
-        localStorage.setItem('mw_reset_browser_key', res.browserKey);
+      next: () => {
         this.loading.set(false);
         this.success.set(true);
       },
