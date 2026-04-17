@@ -350,6 +350,7 @@ import { LanguageService } from '../../../core/services/language.service';
       cursor: pointer;
       color: var(--text-muted);
       overflow: hidden;
+      outline: none;
       -webkit-tap-highlight-color: transparent;
       .material-icons-round { font-size: 18px; }
       &:hover { color: var(--text-primary); }
