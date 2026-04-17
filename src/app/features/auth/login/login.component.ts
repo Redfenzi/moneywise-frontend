@@ -12,7 +12,8 @@ import { LanguageService } from '../../../core/services/language.service';
   imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   template: `
     <div class="auth-container">
-      <div class="auth-card">
+      <div class="auth-wrapper">
+        <div class="auth-card">
         <div class="auth-logo">
           <div class="logo-icon">
             <span class="material-icons-round">account_balance_wallet</span>
@@ -96,6 +97,7 @@ import { LanguageService } from '../../../core/services/language.service';
         </div>
         <span class="material-icons-round android-arrow">download</span>
       </a>
+      </div>
     </div>
   `,
   styles: [`
@@ -121,6 +123,17 @@ import { LanguageService } from '../../../core/services/language.service';
       &.active { color: var(--primary-light); font-weight: 700; }
     }
     .lang-sep { color: var(--border); font-size: 0.75rem; }
+    :host { width: 100%; display: flex; justify-content: center; }
+    .auth-wrapper {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 480px;
+      position: relative;
+      z-index: 1;
+      padding: 0 16px;
+      box-sizing: border-box;
+    }
     .password-toggle {
       position: absolute;
       right: 12px;
