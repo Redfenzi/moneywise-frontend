@@ -195,7 +195,7 @@ import { LanguageService } from '../../../core/services/language.service';
       max-width: 480px;
       position: relative;
       z-index: 1;
-      padding: 0 16px;
+      padding: 0;
       box-sizing: border-box;
     }
     .password-toggle {
@@ -219,6 +219,9 @@ import { LanguageService } from '../../../core/services/language.service';
       display: flex;
       gap: 12px;
       margin-top: 20px;
+      @media (max-width: 400px) {
+        flex-direction: column;
+      }
     }
     .app-banner {
       flex: 1;
@@ -273,7 +276,7 @@ import { LanguageService } from '../../../core/services/language.service';
       min-width: 0;
     }
     .banner-label {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
       color: var(--text-primary);
       white-space: nowrap;
