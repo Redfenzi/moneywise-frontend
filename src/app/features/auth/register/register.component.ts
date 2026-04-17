@@ -181,14 +181,15 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (Capacitor.isNativePlatform()) {
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
+      // Bloquer scroll horizontal uniquement — le scroll vertical est nécessaire
+      document.documentElement.style.overflowX = 'hidden';
+      document.body.style.overflowX = 'hidden';
     }
   }
 
   ngOnDestroy() {
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
+    document.documentElement.style.overflowX = '';
+    document.body.style.overflowX = '';
   }
 
   onSubmit() {
