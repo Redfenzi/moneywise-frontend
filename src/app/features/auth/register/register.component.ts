@@ -12,7 +12,7 @@ import { LanguageService } from '../../../core/services/language.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   template: `
-    <div class="auth-container">
+    <div class="auth-container" style="align-items: flex-start;">
       <div class="auth-card" style="max-width: 560px;">
         <div class="auth-logo">
           <div class="logo-icon">
@@ -180,17 +180,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (Capacitor.isNativePlatform()) {
-      // Bloquer scroll horizontal uniquement — le scroll vertical est nécessaire
-      document.documentElement.style.overflowX = 'hidden';
-      document.body.style.overflowX = 'hidden';
-    }
+    // Le scroll vertical est géré par touch-action: pan-y (styles.scss)
+    // overflow-x: hidden est déjà appliqué globalement sur body
   }
 
-  ngOnDestroy() {
-    document.documentElement.style.overflowX = '';
-    document.body.style.overflowX = '';
-  }
+  ngOnDestroy() {}
 
   onSubmit() {
     if (this.form.invalid) return;

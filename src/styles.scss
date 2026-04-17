@@ -64,6 +64,7 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
+  overscroll-behavior-x: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -860,6 +861,8 @@ table {
   position: relative;
   padding: 40px 16px;
   box-sizing: border-box;
+  touch-action: pan-y;
+  overscroll-behavior-x: none;
 
   &::before {
     content: '';
