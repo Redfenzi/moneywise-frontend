@@ -118,4 +118,13 @@ export class ApiService {
   deleteAccount(password: string) {
     return this.http.delete<any>(`${this.BASE}/users/account`, { body: { password } });
   }
+
+  // === PASSWORD RESET ===
+  forgotPassword(email: string) {
+    return this.http.post<{ browserKey: string }>(`${this.BASE}/auth/forgot-password`, { email });
+  }
+
+  resetPassword(token: string, browserKey: string, newPassword: string) {
+    return this.http.post<{ message: string }>(`${this.BASE}/auth/reset-password`, { token, browserKey, newPassword });
+  }
 }

@@ -24,7 +24,35 @@
       "loading": "Signing in...",
       "no_account": "Don't have an account?",
       "create_account": "Create an account",
-      "error_invalid": "Invalid credentials"
+      "error_invalid": "Invalid credentials",
+      "forgot_password": "Forgot password?"
+    },
+    "forgot": {
+      "title": "Forgot password",
+      "subtitle": "Enter your email to receive a reset link",
+      "email": "Email address",
+      "email_placeholder": "your@email.com",
+      "submit": "Send reset link",
+      "loading": "Sending...",
+      "success_title": "Email sent!",
+      "success_desc": "If your email is registered, you will receive a link valid for 1 hour. Open it from this same browser.",
+      "back_login": "Back to login"
+    },
+    "reset": {
+      "title": "New password",
+      "subtitle": "Choose a new secure password",
+      "new_password": "New password",
+      "password_placeholder": "Minimum 6 characters",
+      "confirm_password": "Confirm password",
+      "confirm_placeholder": "Repeat password",
+      "password_min": "Password must be at least 6 characters",
+      "password_mismatch": "Passwords do not match",
+      "submit": "Reset password",
+      "loading": "Resetting...",
+      "success_title": "Password changed!",
+      "success_desc": "You will be redirected to the login page...",
+      "link_invalid": "Invalid or expired link",
+      "back_login": "Back to login"
     },
     "register": {
       "title": "Create an account",

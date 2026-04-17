@@ -66,6 +66,12 @@ import { LanguageService } from '../../../core/services/language.service';
             </div>
           </div>
 
+          <div style="text-align:right; margin-top: -12px; margin-bottom: 16px;">
+            <a routerLink="/auth/forgot-password" style="font-size:0.8rem; color: var(--primary-light); font-weight:500;">
+              {{ 'auth.login.forgot_password' | translate }}
+            </a>
+          </div>
+
           <button type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top: 8px;"
                   [disabled]="form.invalid || loading()">
             <span class="loading-spinner" *ngIf="loading()"></span>

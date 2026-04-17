@@ -24,7 +24,35 @@
       "loading": "Connexion...",
       "no_account": "Pas encore de compte ?",
       "create_account": "Créer un compte",
-      "error_invalid": "Identifiants invalides"
+      "error_invalid": "Identifiants invalides",
+      "forgot_password": "Mot de passe oublié ?"
+    },
+    "forgot": {
+      "title": "Mot de passe oublié",
+      "subtitle": "Entrez votre email pour recevoir un lien de réinitialisation",
+      "email": "Adresse email",
+      "email_placeholder": "votre@email.com",
+      "submit": "Envoyer le lien",
+      "loading": "Envoi en cours...",
+      "success_title": "Email envoyé !",
+      "success_desc": "Si votre email est enregistré, vous recevrez un lien valable 1 heure. Ouvrez-le depuis ce même navigateur.",
+      "back_login": "Retour à la connexion"
+    },
+    "reset": {
+      "title": "Nouveau mot de passe",
+      "subtitle": "Choisissez un nouveau mot de passe sécurisé",
+      "new_password": "Nouveau mot de passe",
+      "password_placeholder": "Minimum 6 caractères",
+      "confirm_password": "Confirmer le mot de passe",
+      "confirm_placeholder": "Répétez le mot de passe",
+      "password_min": "Le mot de passe doit contenir au moins 6 caractères",
+      "password_mismatch": "Les mots de passe ne correspondent pas",
+      "submit": "Réinitialiser",
+      "loading": "Réinitialisation...",
+      "success_title": "Mot de passe modifié !",
+      "success_desc": "Vous allez être redirigé vers la page de connexion...",
+      "link_invalid": "Lien invalide ou expiré",
+      "back_login": "Retour à la connexion"
     },
     "register": {
       "title": "Créer un compte",
