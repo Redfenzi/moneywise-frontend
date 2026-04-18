@@ -326,7 +326,14 @@ export class SubscriptionsComponent implements OnInit {
   }
 
   toggleSub(sub: Subscription) {
-    this.api.toggleSubscription(sub.id!).subscribe(() => this.loadSubscriptions());
+    const wasActive = sub.isActive;
+    this.api.toggleSubscription(sub.id!).subscribe({
+      next: () => {
+        if (wasActive) this.activeFilter.set('ALL');
+        this.loadSubscriptions();
+      },
+      error: () => { this.cdr.detectChanges(); }
+    });
   }
 
   deleteSub(id: number) {
