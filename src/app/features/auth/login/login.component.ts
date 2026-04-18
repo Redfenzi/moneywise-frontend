@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { LanguageService } from '../../../core/services/language.service';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-login',
@@ -29,6 +30,10 @@ import { LanguageService } from '../../../core/services/language.service';
           <span class="lang-sep">|</span>
           <button class="lang-btn" [class.active]="lang.currentLang() === 'en'" (click)="lang.setLanguage('en')">
             🇬🇧 EN
+          </button>
+          <span class="lang-sep">|</span>
+          <button class="lang-btn theme-toggle-btn" (click)="theme.toggle()" [title]="theme.isDark() ? ('nav.theme_light' | translate) : ('nav.theme_dark' | translate)">
+            <span class="material-icons-round" style="font-size:16px; vertical-align:middle;">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
           </button>
         </div>
 
@@ -451,6 +456,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   };
 
   lang = inject(LanguageService);
+  theme = inject(ThemeService);
   private translate = inject(TranslateService);
 
   constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {
