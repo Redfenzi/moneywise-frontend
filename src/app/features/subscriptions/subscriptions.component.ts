@@ -154,7 +154,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
             <div class="form-group">
               <label class="form-label">{{ 'subscriptions.field_name' | translate }}</label>
               <input type="text" class="form-control" formControlName="name"
+                     [class.error]="form.get('name')?.invalid && form.get('name')?.touched"
                      [placeholder]="'subscriptions.field_name_placeholder' | translate">
+              <div class="form-error" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+                <span *ngIf="form.get('name')?.errors?.['required']">{{ 'validation.required' | translate }}</span>
+              </div>
             </div>
             <div class="form-row">
               <div class="form-group">
@@ -168,7 +172,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                 <div class="input-with-icon">
                   <span class="material-icons-round input-icon">euro</span>
                   <input type="number" class="form-control" formControlName="monthlyAmount"
+                         [class.error]="form.get('monthlyAmount')?.invalid && form.get('monthlyAmount')?.touched"
                          placeholder="0.00" step="0.01" min="0">
+                </div>
+                <div class="form-error" *ngIf="form.get('monthlyAmount')?.invalid && form.get('monthlyAmount')?.touched">
+                  <span *ngIf="form.get('monthlyAmount')?.errors?.['required']">{{ 'validation.required' | translate }}</span>
+                  <span *ngIf="form.get('monthlyAmount')?.errors?.['min']">{{ 'validation.amount_min' | translate }}</span>
                 </div>
               </div>
             </div>
@@ -315,6 +324,7 @@ export class SubscriptionsComponent implements OnInit {
   }
 
   saveSub() {
+    this.form.markAllAsTouched();
     if (this.form.invalid) return;
     this.saving.set(true);
     const id = this.editingId();

@@ -31,12 +31,22 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
             <div class="form-group">
               <label class="form-label">{{ 'profile.first_name' | translate }}</label>
               <input class="form-input" type="text" name="firstName"
-                     [(ngModel)]="profile.firstName" required />
+                     [(ngModel)]="profile.firstName" required
+                     #firstNameInput="ngModel"
+                     [class.error]="firstNameInput.invalid && firstNameInput.touched" />
+              <div class="form-error" *ngIf="firstNameInput.invalid && firstNameInput.touched">
+                <span *ngIf="firstNameInput.errors?.['required']">{{ 'validation.required' | translate }}</span>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label">{{ 'profile.last_name' | translate }}</label>
               <input class="form-input" type="text" name="lastName"
-                     [(ngModel)]="profile.lastName" required />
+                     [(ngModel)]="profile.lastName" required
+                     #lastNameInput="ngModel"
+                     [class.error]="lastNameInput.invalid && lastNameInput.touched" />
+              <div class="form-error" *ngIf="lastNameInput.invalid && lastNameInput.touched">
+                <span *ngIf="lastNameInput.errors?.['required']">{{ 'validation.required' | translate }}</span>
+              </div>
             </div>
           </div>
 
@@ -48,7 +58,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
           <div class="form-group">
             <label class="form-label">{{ 'profile.email' | translate }}</label>
             <input class="form-input" type="email" name="email"
-                   [(ngModel)]="profile.email" required />
+                   [(ngModel)]="profile.email" required
+                   #emailInput="ngModel"
+                   [class.error]="emailInput.invalid && emailInput.touched" />
+            <div class="form-error" *ngIf="emailInput.invalid && emailInput.touched">
+              <span *ngIf="emailInput.errors?.['required']">{{ 'validation.required' | translate }}</span>
+              <span *ngIf="emailInput.errors?.['email']">{{ 'validation.email_invalid' | translate }}</span>
+            </div>
           </div>
 
           <div class="form-group">
@@ -86,13 +102,24 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
           <div class="form-group">
             <label class="form-label">{{ 'profile.current_password' | translate }}</label>
             <input class="form-input" type="password" name="currentPassword"
-                   [(ngModel)]="passwords.currentPassword" required />
+                   [(ngModel)]="passwords.currentPassword" required
+                   #currentPasswordInput="ngModel"
+                   [class.error]="currentPasswordInput.invalid && currentPasswordInput.touched" />
+            <div class="form-error" *ngIf="currentPasswordInput.invalid && currentPasswordInput.touched">
+              <span *ngIf="currentPasswordInput.errors?.['required']">{{ 'validation.required' | translate }}</span>
+            </div>
           </div>
 
           <div class="form-group">
             <label class="form-label">{{ 'profile.new_password' | translate }}</label>
             <input class="form-input" type="password" name="newPassword"
-                   [(ngModel)]="passwords.newPassword" required minlength="6" />
+                   [(ngModel)]="passwords.newPassword" required minlength="6"
+                   #newPasswordInput="ngModel"
+                   [class.error]="newPasswordInput.invalid && newPasswordInput.touched" />
+            <div class="form-error" *ngIf="newPasswordInput.invalid && newPasswordInput.touched">
+              <span *ngIf="newPasswordInput.errors?.['required']">{{ 'validation.required' | translate }}</span>
+              <span *ngIf="newPasswordInput.errors?.['minlength']">{{ 'validation.min_length_6' | translate }}</span>
+            </div>
           </div>
 
           <div class="form-group">

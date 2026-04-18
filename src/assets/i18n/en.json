@@ -312,5 +312,12 @@
     "DZD": "🇩🇿 Algerian Dinar (DZD)",
     "TND": "🇹🇳 Tunisian Dinar (TND)",
     "XOF": "🌍 CFA Franc (XOF)"
+  },
+  "validation": {
+    "required": "This field is required",
+    "min_length_3": "Minimum 3 characters",
+    "min_length_6": "Minimum 6 characters",
+    "email_invalid": "Invalid email address",
+    "amount_min": "Amount must be greater than 0"
   }
 }

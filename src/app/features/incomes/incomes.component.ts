@@ -140,7 +140,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                 <div class="input-with-icon">
                   <span class="material-icons-round input-icon">euro</span>
                   <input type="number" class="form-control" formControlName="amount"
+                         [class.error]="form.get('amount')?.invalid && form.get('amount')?.touched"
                          placeholder="0.00" step="0.01" min="0">
+                </div>
+                <div class="form-error" *ngIf="form.get('amount')?.invalid && form.get('amount')?.touched">
+                  <span *ngIf="form.get('amount')?.errors?.['required']">{{ 'validation.required' | translate }}</span>
+                  <span *ngIf="form.get('amount')?.errors?.['min']">{{ 'validation.amount_min' | translate }}</span>
                 </div>
               </div>
             </div>
@@ -148,7 +153,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
             <div class="form-group">
               <label class="form-label">{{ 'incomes.field_description' | translate }}</label>
               <input type="text" class="form-control" formControlName="description"
+                     [class.error]="form.get('description')?.invalid && form.get('description')?.touched"
                      [placeholder]="'incomes.field_description_placeholder' | translate">
+              <div class="form-error" *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
+                <span *ngIf="form.get('description')?.errors?.['required']">{{ 'validation.required' | translate }}</span>
+              </div>
             </div>
 
             <div class="form-row">
@@ -368,6 +377,7 @@ export class IncomesComponent implements OnInit {
   }
 
   saveIncome() {
+    this.form.markAllAsTouched();
     if (this.form.invalid) return;
     this.saving.set(true);
     const id = this.editingId();

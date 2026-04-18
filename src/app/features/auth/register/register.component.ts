@@ -46,12 +46,20 @@ import { LanguageService } from '../../../core/services/language.service';
             <div class="form-group">
               <label class="form-label">{{ 'auth.register.first_name' | translate }}</label>
               <input type="text" class="form-control" formControlName="firstName"
+                     [class.error]="form.get('firstName')?.invalid && form.get('firstName')?.touched"
                      [placeholder]="'auth.register.first_name_placeholder' | translate">
+              <div class="form-error" *ngIf="form.get('firstName')?.invalid && form.get('firstName')?.touched">
+                <span *ngIf="form.get('firstName')?.errors?.['required']">{{ 'validation.required' | translate }}</span>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label">{{ 'auth.register.last_name' | translate }}</label>
               <input type="text" class="form-control" formControlName="lastName"
+                     [class.error]="form.get('lastName')?.invalid && form.get('lastName')?.touched"
                      [placeholder]="'auth.register.last_name_placeholder' | translate">
+              <div class="form-error" *ngIf="form.get('lastName')?.invalid && form.get('lastName')?.touched">
+                <span *ngIf="form.get('lastName')?.errors?.['required']">{{ 'validation.required' | translate }}</span>
+              </div>
             </div>
           </div>
 
@@ -60,7 +68,12 @@ import { LanguageService } from '../../../core/services/language.service';
             <div class="input-with-icon">
               <span class="material-icons-round input-icon">person</span>
               <input type="text" class="form-control" formControlName="username"
+                     [class.error]="form.get('username')?.invalid && form.get('username')?.touched"
                      [placeholder]="'auth.register.username_placeholder' | translate">
+            </div>
+            <div class="form-error" *ngIf="form.get('username')?.invalid && form.get('username')?.touched">
+              <span *ngIf="form.get('username')?.errors?.['required']">{{ 'validation.required' | translate }}</span>
+              <span *ngIf="form.get('username')?.errors?.['minlength']">{{ 'validation.min_length_3' | translate }}</span>
             </div>
           </div>
 
@@ -69,7 +82,12 @@ import { LanguageService } from '../../../core/services/language.service';
             <div class="input-with-icon">
               <span class="material-icons-round input-icon">email</span>
               <input type="email" class="form-control" formControlName="email"
+                     [class.error]="form.get('email')?.invalid && form.get('email')?.touched"
                      [placeholder]="'auth.register.email_placeholder' | translate">
+            </div>
+            <div class="form-error" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+              <span *ngIf="form.get('email')?.errors?.['required']">{{ 'validation.required' | translate }}</span>
+              <span *ngIf="form.get('email')?.errors?.['email']">{{ 'validation.email_invalid' | translate }}</span>
             </div>
           </div>
 
@@ -99,6 +117,10 @@ import { LanguageService } from '../../../core/services/language.service';
               <button type="button" class="password-toggle" (click)="showPassword.set(!showPassword())">
                 <span class="material-icons-round">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
               </button>
+            </div>
+            <div class="form-error" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+              <span *ngIf="form.get('password')?.errors?.['required']">{{ 'validation.required' | translate }}</span>
+              <span *ngIf="form.get('password')?.errors?.['minlength']">{{ 'validation.min_length_6' | translate }}</span>
             </div>
           </div>
 
@@ -187,6 +209,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   ngOnDestroy() {}
 
   onSubmit() {
+    this.form.markAllAsTouched();
     if (this.form.invalid) return;
     this.loading.set(true);
     this.error.set('');

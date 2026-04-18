@@ -51,6 +51,9 @@ import { LanguageService } from '../../../core/services/language.service';
                      [placeholder]="'auth.login.username_placeholder' | translate"
                      [class.error]="form.get('username')?.invalid && form.get('username')?.touched">
             </div>
+            <div class="form-error" *ngIf="form.get('username')?.invalid && form.get('username')?.touched">
+              <span *ngIf="form.get('username')?.errors?.['required']">{{ 'validation.required' | translate }}</span>
+            </div>
           </div>
 
           <div class="form-group">
@@ -65,6 +68,10 @@ import { LanguageService } from '../../../core/services/language.service';
               <button type="button" class="password-toggle" (click)="showPassword.set(!showPassword())">
                 <span class="material-icons-round">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
               </button>
+            </div>
+            <div class="form-error" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+              <span *ngIf="form.get('password')?.errors?.['required']">{{ 'validation.required' | translate }}</span>
+              <span *ngIf="form.get('password')?.errors?.['minlength']">{{ 'validation.min_length_6' | translate }}</span>
             </div>
           </div>
 
@@ -513,6 +520,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    this.form.markAllAsTouched();
     if (this.form.invalid) return;
     this.loading.set(true);
     this.error.set('');
