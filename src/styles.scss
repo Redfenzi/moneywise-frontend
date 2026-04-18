@@ -89,6 +89,8 @@ html {
   overscroll-behavior-x: none;
   padding-top: env(safe-area-inset-top, 0px);
   touch-action: pan-y;
+  background-color: var(--bg-primary);
+  min-height: 100%;
 }
 
 body {
@@ -99,6 +101,13 @@ body {
   overscroll-behavior-x: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+app-root {
+  display: block;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
 }
 
 // ===== SCROLLBAR =====
@@ -157,6 +166,7 @@ a {
 .page-container {
   padding: 32px;
   max-width: 1400px;
+  width: 100%;
 }
 
 // ===== CARDS =====
