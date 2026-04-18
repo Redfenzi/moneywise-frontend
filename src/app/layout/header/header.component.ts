@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { LanguageService } from '../../core/services/language.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { RouterLink, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -30,6 +31,10 @@ import { TranslateModule } from '@ngx-translate/core';
             🇬🇧 EN
           </button>
         </div>
+
+        <button class="btn-theme-header" (click)="theme.toggle()" [title]="theme.isDark() ? ('nav.theme_light' | translate) : ('nav.theme_dark' | translate)">
+          <span class="material-icons-round">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+        </button>
 
         <div class="user-menu-wrapper" (click)="$event.stopPropagation()">
           <div class="user-avatar" (click)="toggleDropdown()">
@@ -140,6 +145,29 @@ import { TranslateModule } from '@ngx-translate/core';
       font-size: 0.75rem;
     }
 
+    .btn-theme-header {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      flex-shrink: 0;
+
+      .material-icons-round { font-size: 18px; }
+
+      &:hover {
+        background: rgba(108, 99, 255, 0.1);
+        color: var(--primary-light);
+        border-color: var(--primary-light);
+      }
+    }
+
     .user-menu-wrapper {
       position: relative;
     }
@@ -236,7 +264,7 @@ export class HeaderComponent {
   today = new Date();
   dropdownOpen = false;
 
-  constructor(public auth: AuthService, public lang: LanguageService, private router: Router) {}
+  constructor(public auth: AuthService, public lang: LanguageService, public theme: ThemeService, private router: Router) {}
 
   @HostListener('document:click')
   closeDropdown() { this.dropdownOpen = false; }
