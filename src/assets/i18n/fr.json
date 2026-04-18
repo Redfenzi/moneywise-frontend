@@ -10,7 +10,9 @@
     "subscriptions": "Abonnements",
     "bank_accounts": "Comptes bancaires",
     "profile": "Mon profil",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "theme_light": "Thème clair",
+    "theme_dark": "Thème sombre"
   },
   "auth": {
     "login": {

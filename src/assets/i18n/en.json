@@ -10,7 +10,9 @@
     "subscriptions": "Subscriptions",
     "bank_accounts": "Bank Accounts",
     "profile": "My Profile",
-    "logout": "Logout"
+    "logout": "Logout",
+    "theme_light": "Light theme",
+    "theme_dark": "Dark theme"
   },
   "auth": {
     "login": {

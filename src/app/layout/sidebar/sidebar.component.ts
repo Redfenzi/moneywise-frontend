@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 interface NavItem {
   label: string;
@@ -38,6 +39,14 @@ interface NavItem {
       <button class="collapse-btn" (click)="toggle.emit()">
         <span class="material-icons-round">{{ collapsed ? 'chevron_right' : 'chevron_left' }}</span>
       </button>
+
+      <div class="sidebar-bottom">
+        <button class="nav-item theme-btn" (click)="theme.toggle()"
+                [attr.data-tooltip]="collapsed ? (theme.isDark() ? ('nav.theme_light' | translate) : ('nav.theme_dark' | translate)) : null">
+          <span class="material-icons-round nav-icon">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+          <span class="nav-label" *ngIf="!collapsed">{{ theme.isDark() ? ('nav.theme_light' | translate) : ('nav.theme_dark' | translate) }}</span>
+        </button>
+      </div>
     </aside>
   `,
   styles: [`
@@ -156,9 +165,23 @@ interface NavItem {
       }
     }
 
+    .sidebar-bottom {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+
+      .theme-btn {
+        width: 100%;
+        color: var(--text-secondary);
+        &:hover {
+          background: rgba(108, 99, 255, 0.1);
+          color: var(--text-primary);
+        }
+      }
+    }
+
     .collapse-btn {
       position: absolute;
-      bottom: 80px;
+      bottom: 130px;
       right: -14px;
       width: 28px;
       height: 28px;
@@ -210,5 +233,5 @@ export class SidebarComponent {
     { label: 'nav.bank_accounts',icon: 'account_balance', route: '/bank-accounts' },
   ];
 
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService, public theme: ThemeService) {}
 }

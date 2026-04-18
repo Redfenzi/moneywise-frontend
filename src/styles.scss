@@ -46,6 +46,31 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+// ===== LIGHT THEME =====
+[data-theme="light"] {
+  --bg-primary: #F0EFFA;
+  --bg-secondary: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F5F4FF;
+  --bg-input: #F0EFF9;
+
+  --text-primary: #1A1928;
+  --text-secondary: #5B5C74;
+  --text-muted: #9B9DB5;
+
+  --border: #E2E1EE;
+  --border-light: #CECDE0;
+
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 40px rgba(108, 99, 255, 0.12);
+
+  --success-bg: #D1FAE5;
+  --warning-bg: #FEF3C7;
+  --danger-bg: #FEE2E2;
+  --info-bg: #DBEAFE;
+}
+
 // ===== RESET =====
 *, *::before, *::after {
   box-sizing: border-box;
