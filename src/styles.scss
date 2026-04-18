@@ -63,6 +63,7 @@ html {
   scroll-behavior: smooth;
   overscroll-behavior-x: none;
   padding-top: env(safe-area-inset-top, 0px);
+  touch-action: pan-y;
 }
 
 body {
