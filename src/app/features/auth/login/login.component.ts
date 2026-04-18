@@ -434,7 +434,6 @@ import { LanguageService } from '../../../core/services/language.service';
         line-height: 1.4;
       }
     }
-    }
   `]
 })
 export class LoginComponent implements OnInit, OnDestroy {
