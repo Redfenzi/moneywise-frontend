@@ -130,7 +130,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
               <div class="form-group">
                 <label class="form-label">{{ 'incomes.field_type' | translate }}</label>
                 <select class="form-control" formControlName="type">
-                  <option *ngFor="let t of incomeTypes" [value]="t.value">
+                  <option *ngFor="let t of incomeTypeOptions" [value]="t.value">
                     {{ t.label | translate }}
                   </option>
                 </select>
@@ -315,6 +315,10 @@ export class IncomesComponent implements OnInit {
 
   get currencyCode(): string {
     return this.authService.currentUser()?.currency || 'EUR';
+  }
+
+  get incomeTypeOptions() {
+    return this.incomeTypes.filter(t => t.value !== 'ALL');
   }
 
   ngOnInit() {
