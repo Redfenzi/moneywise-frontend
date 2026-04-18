@@ -12,7 +12,7 @@ import { LanguageService } from '../../../core/services/language.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   template: `
-    <div class="auth-container" style="align-items: flex-start; overflow-x: hidden;">
+    <div class="auth-container" style="align-items: flex-start;">
       <div class="auth-card" style="max-width: 560px; width: 100%; box-sizing: border-box;">
         <div class="auth-logo">
           <div class="logo-icon">
