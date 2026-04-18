@@ -199,6 +199,7 @@
     "active_count": "Abonnements actifs",
     "monthly": "Par mois (actifs)",
     "yearly": "Par an (projection)",
+    "list_title": "Tous les abonnements",
     "filter_all": "Tous",
     "filter_active": "Actifs",
     "empty_title": "Aucun abonnement",

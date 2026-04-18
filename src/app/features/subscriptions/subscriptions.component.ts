@@ -56,7 +56,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
         <div class="card-header">
           <div class="card-title">
             <span class="material-icons-round">list_alt</span>
-            Tous les abonnements
+            {{ 'subscriptions.list_title' | translate }}
           </div>
           <div class="flex flex-gap">
             <button class="btn btn-secondary btn-sm"
