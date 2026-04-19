@@ -87,7 +87,6 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   overscroll-behavior-x: none;
-  padding-top: env(safe-area-inset-top, 0px);
   touch-action: pan-y;
   background-color: var(--bg-primary);
   min-height: 100%;
@@ -172,6 +171,7 @@ a {
 
 .page-container {
   padding: 32px;
+  padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
   max-width: 1400px;
   width: 100%;
 }

@@ -53,9 +53,10 @@ interface NavItem {
     .sidebar {
       position: fixed;
       left: 0;
-      top: env(safe-area-inset-top, 0px);
+      top: 0;
       bottom: 0;
       width: var(--sidebar-width);
+      padding-top: env(safe-area-inset-top, 0px);
       background: var(--bg-secondary);
       border-right: 1px solid var(--border);
       display: flex;
@@ -166,7 +167,7 @@ interface NavItem {
     }
 
     .sidebar-bottom {
-      padding: 12px;
+      padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
       border-top: 1px solid var(--border);
 
       .theme-btn {

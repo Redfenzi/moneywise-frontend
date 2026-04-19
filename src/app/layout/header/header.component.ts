@@ -59,15 +59,15 @@ import { TranslateModule } from '@ngx-translate/core';
   `,
   styles: [`
     .app-header {
-      height: var(--header-height);
+      height: calc(var(--header-height) + env(safe-area-inset-top, 0px));
       background: var(--bg-secondary);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 32px;
+      padding: env(safe-area-inset-top, 0px) 32px 0;
       position: sticky;
-      top: env(safe-area-inset-top, 0px);
+      top: 0;
       z-index: 100;
     }
 
