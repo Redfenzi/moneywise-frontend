@@ -42,7 +42,10 @@
       "ios_step3_title": "\u00ab Sur l'écran d'accueil \u00bb",
       "ios_step3_desc": "Faites défiler le menu et appuyez dessus",
       "ios_step4_title": "Appuyez sur \u00ab Ajouter \u00bb",
-      "ios_step4_desc": "MoneyWise apparaît comme une vraie app !"
+      "ios_step4_desc": "MoneyWise apparaît comme une vraie app !",
+      "resend_verification": "Renvoyer l'email de confirmation \u2192",
+      "resend_hint": "Entrez votre adresse email pour recevoir un nouveau lien :",
+      "resend_email_placeholder": "votre@email.com"
     },
     "forgot": {
       "title": "Mot de passe oublié",
@@ -109,7 +112,12 @@
       "error_desc": "Ce lien de vérification est invalide ou a expiré.",
       "go_login": "Se connecter",
       "app_hint": "Si vous avez ouvert ce lien depuis l'application mobile (Android ou iOS), fermez cet onglet et revenez à MoneyWise pour vous connecter.",
-      "go_register": "Créer un nouveau compte"
+      "go_register": "Créer un nouveau compte",
+      "resend_hint": "Votre lien a expiré ? Entrez votre email pour en recevoir un nouveau.",
+      "resend_placeholder": "votre&#64;email.com",
+      "resend_btn": "Renvoyer l'email",
+      "resend_loading": "Envoi en cours...",
+      "resend_success": "Email renvoyé ! Vérifiez votre boîte mail (pensez aux spams). Vous avez 2 minutes."
     }
   },
   "dashboard": {

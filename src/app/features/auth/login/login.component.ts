@@ -1,17 +1,18 @@
 import { Component, signal, inject, OnInit, OnDestroy } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
+import { ApiService } from '../../../core/services/api.service';
 import { LanguageService } from '../../../core/services/language.service';
 import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, TranslateModule],
   template: `
     <div class="auth-container">
       <div class="auth-wrapper">
@@ -44,7 +45,34 @@ import { ThemeService } from '../../../core/services/theme.service';
 
         <div *ngIf="error()" class="alert alert-danger">
           <span class="material-icons-round">error_outline</span>
-          {{ error() }}
+          <div>
+            {{ error() }}
+            <div *ngIf="emailNotVerified()" style="margin-top: 8px;">
+              <a routerLink="/auth/verify-email-resend" style="color: inherit; font-weight: 700; text-decoration: underline; cursor: pointer;"
+                 (click)="$event.preventDefault(); showResendHint.set(true)">
+                {{ 'auth.login.resend_verification' | translate }}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulaire renvoi email après EMAIL_NOT_VERIFIED -->
+        <div *ngIf="showResendHint()" class="resend-hint-block">
+          <p>{{ 'auth.login.resend_hint' | translate }}</p>
+          <div class="resend-inline-form">
+            <input type="email" class="form-control" [(ngModel)]="resendEmailLogin" [ngModelOptions]="{standalone: true}"
+                   [placeholder]="'auth.login.resend_email_placeholder' | translate">
+            <button class="btn btn-primary" type="button" (click)="doResendLogin()" [disabled]="!resendEmailLogin || resendLoginLoading()">
+              <span class="loading-spinner" *ngIf="resendLoginLoading()"></span>
+              <span class="material-icons-round" *ngIf="!resendLoginLoading()">send</span>
+              {{ resendLoginLoading() ? ('auth.forgot.loading' | translate) : ('auth.verify_email.resend_btn' | translate) }}
+            </button>
+          </div>
+          <p class="resend-inline-success" *ngIf="resendLoginDone()">
+            <span class="material-icons-round" style="font-size:16px; vertical-align:middle;">check_circle</span>
+            {{ 'auth.verify_email.resend_success' | translate }}
+          </p>
+          <p class="resend-inline-error" *ngIf="resendLoginError()">{{ resendLoginError() }}</p>
         </div>
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -174,6 +202,29 @@ import { ThemeService } from '../../../core/services/theme.service';
     </div>
   `,
   styles: [`
+    .resend-hint-block {
+      background: rgba(108,99,255,0.06);
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      p { font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 10px; }
+    }
+    .resend-inline-form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .resend-inline-success {
+      font-size: 0.82rem;
+      color: #10b981;
+      margin: 8px 0 0;
+    }
+    .resend-inline-error {
+      font-size: 0.82rem;
+      color: var(--danger);
+      margin: 8px 0 0;
+    }
     .lang-switcher-auth {
       display: flex;
       justify-content: center;
@@ -448,6 +499,12 @@ export class LoginComponent implements OnInit, OnDestroy {
   error = signal('');
   showPassword = signal(false);
   showIosModal = signal(false);
+  emailNotVerified = signal(false);
+  showResendHint = signal(false);
+  resendEmailLogin = '';
+  resendLoginLoading = signal(false);
+  resendLoginDone = signal(false);
+  resendLoginError = signal('');
   private scrollY = 0;
   private popstateHandler = () => {
     if (this.showIosModal()) {
@@ -458,6 +515,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   lang = inject(LanguageService);
   theme = inject(ThemeService);
   private translate = inject(TranslateService);
+  private api = inject(ApiService);
 
   constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {
     this.form = this.fb.group({
@@ -529,16 +587,35 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.form.invalid) return;
     this.loading.set(true);
     this.error.set('');
+    this.emailNotVerified.set(false);
+    this.showResendHint.set(false);
 
     this.auth.login(this.form.value).subscribe({
       next: () => this.router.navigate(['/dashboard']),
       error: (err: { status?: number; error?: { error?: string } }) => {
         this.loading.set(false);
         if (err.status === 403 && err.error?.error === 'EMAIL_NOT_VERIFIED') {
+          this.emailNotVerified.set(true);
           this.error.set(this.translate.instant('auth.register.error_email_not_verified'));
         } else {
           this.error.set(err.error?.error || this.translate.instant('auth.login.error_invalid'));
         }
+      }
+    });
+  }
+
+  doResendLogin() {
+    if (!this.resendEmailLogin) return;
+    this.resendLoginLoading.set(true);
+    this.resendLoginError.set('');
+    this.api.resendVerification(this.resendEmailLogin).subscribe({
+      next: () => {
+        this.resendLoginLoading.set(false);
+        this.resendLoginDone.set(true);
+      },
+      error: (err) => {
+        this.resendLoginLoading.set(false);
+        this.resendLoginError.set(err.error?.error || 'Une erreur est survenue.');
       }
     });
   }

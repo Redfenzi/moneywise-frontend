@@ -119,6 +119,11 @@ export class ApiService {
     return this.http.delete<any>(`${this.BASE}/users/account`, { body: { password } });
   }
 
+  // === EMAIL VERIFICATION ===
+  resendVerification(email: string) {
+    return this.http.post<{ message: string }>(`${this.BASE}/auth/resend-verification`, { email });
+  }
+
   // === PASSWORD RESET ===
   forgotPassword(email: string) {
     return this.http.post<{ browserKey: string }>(`${this.BASE}/auth/forgot-password`, { email });

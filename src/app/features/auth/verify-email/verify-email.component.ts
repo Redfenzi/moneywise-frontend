@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import { LanguageService } from '../../../core/services/language.service';
 import { ThemeService } from '../../../core/services/theme.service';
@@ -10,7 +11,7 @@ import { ThemeService } from '../../../core/services/theme.service';
 @Component({
   selector: 'app-verify-email',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule],
+  imports: [CommonModule, RouterLink, TranslateModule, FormsModule],
   template: `
     <div class="auth-container">
       <div class="auth-card verify-card">
@@ -61,7 +62,28 @@ import { ThemeService } from '../../../core/services/theme.service';
           <span class="material-icons-round status-icon error">error_outline</span>
           <h2>{{ 'auth.verify_email.error_title' | translate }}</h2>
           <p>{{ errorMessage() || ('auth.verify_email.error_desc' | translate) }}</p>
-          <a routerLink="/auth/register" class="btn btn-primary btn-full" style="margin-top: 24px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+
+          <!-- Renvoi email -->
+          <div class="resend-section" *ngIf="!resendDone()">
+            <p class="resend-hint">{{ 'auth.verify_email.resend_hint' | translate }}</p>
+            <div class="resend-form">
+              <input type="email" class="form-control" [(ngModel)]="resendEmailValue"
+                     [placeholder]="'auth.verify_email.resend_placeholder' | translate">
+              <button class="btn btn-primary" (click)="doResend()" [disabled]="!resendEmailValue || resendLoading()">
+                <span class="loading-spinner small" *ngIf="resendLoading()"></span>
+                <span class="material-icons-round" *ngIf="!resendLoading()">send</span>
+                {{ resendLoading() ? ('auth.verify_email.resend_loading' | translate) : ('auth.verify_email.resend_btn' | translate) }}
+              </button>
+            </div>
+            <p class="resend-error" *ngIf="resendError()">{{ resendError() }}</p>
+          </div>
+
+          <div class="alert-success" *ngIf="resendDone()">
+            <span class="material-icons-round">mark_email_read</span>
+            {{ 'auth.verify_email.resend_success' | translate }}
+          </div>
+
+          <a routerLink="/auth/register" class="btn btn-outline btn-full" style="margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;">
             <span class="material-icons-round">person_add</span>
             {{ 'auth.verify_email.go_register' | translate }}
           </a>
@@ -101,10 +123,45 @@ import { ThemeService } from '../../../core/services/theme.service';
       &.success { color: #4caf50; }
       &.error { color: var(--danger); }
     }
-    .loading-spinner.large {
-      width: 48px;
-      height: 48px;
-      border-width: 4px;
+    .resend-section {
+      width: 100%;
+      margin-top: 8px;
+    }
+    .resend-hint {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    .resend-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+    .form-control {
+      width: 100%; box-sizing: border-box; padding: 11px 14px;
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text-primary); font-size: 0.9rem;
+      font-family: 'Inter', sans-serif; outline: none; transition: var(--transition);
+      &:focus { border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(108,99,255,0.15); }
+    }
+    .resend-error {
+      font-size: 0.8rem;
+      color: var(--danger);
+      margin-top: 4px;
+    }
+    .alert-success {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(16,185,129,0.1); color: #10b981;
+      border: 1px solid rgba(16,185,129,0.2);
+      border-radius: 10px; padding: 12px 16px; font-size: 0.875rem;
+      width: 100%; box-sizing: border-box;
+    }
+    .btn-outline {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      &:hover { border-color: var(--primary-light); color: var(--primary-light); }
     }
     .mobile-hint {
       display: flex;
@@ -131,6 +188,11 @@ export class VerifyEmailComponent implements OnInit {
   status = signal<'loading' | 'success' | 'error'>('loading');
   errorMessage = signal('');
 
+  resendEmailValue = '';
+  resendLoading = signal(false);
+  resendDone = signal(false);
+  resendError = signal('');
+
   ngOnInit() {
     const token = this.route.snapshot.queryParamMap.get('token');
     if (!token) {
@@ -142,6 +204,22 @@ export class VerifyEmailComponent implements OnInit {
       error: (err) => {
         this.errorMessage.set(err.error?.error || '');
         this.status.set('error');
+      }
+    });
+  }
+
+  doResend() {
+    if (!this.resendEmailValue) return;
+    this.resendLoading.set(true);
+    this.resendError.set('');
+    this.http.post<{ message: string }>(`${environment.apiUrl}/auth/resend-verification`, { email: this.resendEmailValue }).subscribe({
+      next: () => {
+        this.resendLoading.set(false);
+        this.resendDone.set(true);
+      },
+      error: (err) => {
+        this.resendLoading.set(false);
+        this.resendError.set(err.error?.error || 'Une erreur est survenue.');
       }
     });
   }

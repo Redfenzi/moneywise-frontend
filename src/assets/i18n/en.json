@@ -42,7 +42,10 @@
       "ios_step3_title": "\u201cAdd to Home Screen\u201d",
       "ios_step3_desc": "Scroll the menu and tap it",
       "ios_step4_title": "Tap \u201cAdd\u201d",
-      "ios_step4_desc": "MoneyWise appears like a real app!"
+      "ios_step4_desc": "MoneyWise appears like a real app!",
+      "resend_verification": "Resend confirmation email \u2192",
+      "resend_hint": "Enter your email address to receive a new confirmation link:",
+      "resend_email_placeholder": "your@email.com"
     },
     "forgot": {
       "title": "Forgot password",
@@ -109,7 +112,12 @@
       "error_desc": "This verification link is invalid or has expired.",
       "go_login": "Sign in",
       "app_hint": "If you opened this link from the mobile app (Android or iOS), close this tab and return to MoneyWise to sign in.",
-      "go_register": "Create a new account"
+      "go_register": "Create a new account",
+      "resend_hint": "Your link has expired? Get a new one:",
+      "resend_placeholder": "your@email.com",
+      "resend_btn": "Resend email",
+      "resend_loading": "Sending...",
+      "resend_success": "Email resent! Check your inbox (and spam). You have 2 minutes."
     }
   },
   "dashboard": {
