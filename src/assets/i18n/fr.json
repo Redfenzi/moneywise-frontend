@@ -52,7 +52,7 @@
       "submit": "Envoyer le lien",
       "loading": "Envoi en cours...",
       "success_title": "Email envoyé !",
-      "success_desc": "Si votre email est enregistré, vous recevrez un lien valable 1 heure. Ouvrez-le depuis ce même navigateur.",
+      "success_desc": "Si votre email est enregistré, vous recevrez un lien valable 2 minutes. Vous pouvez l'ouvrir depuis n'importe quel navigateur ou appareil.",
       "back_login": "Retour à la connexion"
     },
     "reset": {

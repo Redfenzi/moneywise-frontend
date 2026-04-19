@@ -52,7 +52,7 @@
       "submit": "Send reset link",
       "loading": "Sending...",
       "success_title": "Email sent!",
-      "success_desc": "If your email is registered, you will receive a link valid for 1 hour. Open it from this same browser.",
+      "success_desc": "If your email is registered, you will receive a link valid for 2 minutes. You can open it from any browser or device.",
       "back_login": "Back to login"
     },
     "reset": {
