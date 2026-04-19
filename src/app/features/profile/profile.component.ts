@@ -429,8 +429,10 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     .modal-header {
       display: flex;
       align-items: center;
+      justify-content: flex-start;
       gap: 12px;
       margin-bottom: 12px;
+      padding: 0;
     }
 
     .modal-icon {
