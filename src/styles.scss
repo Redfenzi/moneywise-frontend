@@ -87,6 +87,7 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   overscroll-behavior-x: none;
+  overflow-x: hidden;
   touch-action: pan-y;
   background-color: var(--bg-primary);
   min-height: 100%;
@@ -99,6 +100,7 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   overscroll-behavior-x: none;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
@@ -174,6 +176,7 @@ a {
   padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
   max-width: 1400px;
   width: 100%;
+  margin: 0 auto;
 }
 
 // ===== CARDS =====
@@ -854,6 +857,7 @@ table {
   }
   .page-container {
     padding: 20px 16px;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -868,6 +872,33 @@ table {
   .modal {
     max-height: 85vh;
     border-radius: var(--border-radius);
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: 16px 12px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .page-title {
+    font-size: 1.375rem;
+  }
+
+  .card {
+    padding: 16px;
   }
 }
 
@@ -907,6 +938,7 @@ table {
   justify-content: center;
   background: var(--bg-primary);
   position: relative;
+  overflow: hidden;
   padding: 40px 16px;
   box-sizing: border-box;
   overscroll-behavior-x: none;

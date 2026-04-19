@@ -69,6 +69,10 @@ import { TranslateModule } from '@ngx-translate/core';
       position: sticky;
       top: 0;
       z-index: 100;
+
+      @media (max-width: 768px) {
+        padding: env(safe-area-inset-top, 0px) 16px 0;
+      }
     }
 
     .mobile-menu {
@@ -95,6 +99,10 @@ import { TranslateModule } from '@ngx-translate/core';
       align-items: center;
       gap: 20px;
       margin-left: auto;
+
+      @media (max-width: 768px) {
+        gap: 10px;
+      }
     }
 
     .date-display {
@@ -118,6 +126,11 @@ import { TranslateModule } from '@ngx-translate/core';
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 4px 8px;
+
+      @media (max-width: 480px) {
+        padding: 3px 6px;
+        gap: 2px;
+      }
     }
 
     .lang-btn {
