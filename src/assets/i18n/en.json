@@ -68,6 +68,7 @@
       "loading": "Resetting...",
       "success_title": "Password changed!",
       "success_desc": "You will be redirected to the login page...",
+      "success_app_hint": "If you followed this link from the Android app, close this tab and return to the MoneyWise app to sign in.",
       "link_invalid": "Invalid or expired link",
       "back_login": "Back to login"
     },

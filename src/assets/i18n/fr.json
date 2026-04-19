@@ -68,6 +68,7 @@
       "loading": "Réinitialisation...",
       "success_title": "Mot de passe modifié !",
       "success_desc": "Vous allez être redirigé vers la page de connexion...",
+      "success_app_hint": "Si vous avez suivi ce lien depuis l'application Android, fermez cet onglet et revenez à l'application MoneyWise pour vous connecter.",
       "link_invalid": "Lien invalide ou expiré",
       "back_login": "Retour à la connexion"
     },

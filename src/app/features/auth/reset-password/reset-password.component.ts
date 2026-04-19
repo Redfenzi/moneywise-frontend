@@ -46,12 +46,21 @@ import { LanguageService } from '../../../core/services/language.service';
         </div>
 
         <!-- Succès -->
-        <div *ngIf="success()" class="alert alert-success">
-          <span class="material-icons-round">check_circle</span>
-          <div>
-            <strong>{{ 'auth.reset.success_title' | translate }}</strong>
-            <p style="margin:4px 0 0; font-size:0.85rem;">{{ 'auth.reset.success_desc' | translate }}</p>
+        <div *ngIf="success()" class="success-block">
+          <span class="material-icons-round success-icon">check_circle</span>
+          <h3>{{ 'auth.reset.success_title' | translate }}</h3>
+
+          <!-- Message spécifique mobile : fermer et retourner à l'app -->
+          <div class="mobile-hint">
+            <span class="material-icons-round">phone_android</span>
+            <p>{{ 'auth.reset.success_app_hint' | translate }}</p>
           </div>
+
+          <!-- Bouton pour les utilisateurs web -->
+          <a routerLink="/auth/login" class="btn btn-primary btn-full" style="margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <span class="material-icons-round">login</span>
+            {{ 'auth.forgot.back_login' | translate }}
+          </a>
         </div>
 
         <!-- Erreur formulaire -->
@@ -181,6 +190,24 @@ import { LanguageService } from '../../../core/services/language.service';
     }
     .alert-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239,68,68,0.2); }
     .alert-success { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+    .success-block {
+      text-align: center;
+      padding: 8px 0 16px;
+      .success-icon { font-size: 56px; color: #10b981; margin-bottom: 12px; }
+      h3 { font-size: 1.25rem; margin-bottom: 16px; }
+    }
+    .mobile-hint {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(108,99,255,0.08);
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: left;
+      .material-icons-round { color: var(--primary-light); font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+      p { font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.5; }
+    }
     .loading-spinner {
       width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3);
       border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite;
@@ -250,7 +277,8 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
       next: () => {
         this.loading.set(false);
         this.success.set(true);
-        setTimeout(() => this.router.navigate(['/auth/login']), 3000);
+        // Pas de redirection automatique : l'utilisateur peut être sur le
+        // navigateur mobile (lien email) et doit manuellement retourner à l'app
       },
       error: (err) => {
         this.loading.set(false);
