@@ -98,7 +98,7 @@
       "privacy_link": "Politique de confidentialité",
       "privacy_required": "Vous devez accepter la politique de confidentialité",
       "success_title": "Vérifiez votre email !",
-      "success_desc": "Un email de confirmation a été envoyé à votre adresse. Cliquez sur le lien dans l'email pour activer votre compte.",
+      "success_desc": "Un email de confirmation a été envoyé à votre adresse. Cliquez sur le lien dans l'email pour activer votre compte. ⚠️ Ce lien est valable 2 minutes.",
       "error_email_not_verified": "Vous devez vérifier votre email avant de vous connecter."
     },
     "verify_email": {

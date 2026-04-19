@@ -98,7 +98,7 @@
       "privacy_link": "Privacy Policy",
       "privacy_required": "You must accept the privacy policy",
       "success_title": "Check your email!",
-      "success_desc": "A confirmation email has been sent to your address. Click the link in the email to activate your account.",
+      "success_desc": "A confirmation email has been sent to your address. Click the link in the email to activate your account. ⚠️ This link is valid for 2 minutes.",
       "error_email_not_verified": "You must verify your email before logging in."
     },
     "verify_email": {
