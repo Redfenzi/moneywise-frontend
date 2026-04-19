@@ -94,6 +94,9 @@
       "already_account": "Already have an account?",
       "login": "Sign in",
       "error_creation": "Error creating account",
+      "privacy_check": "I have read and accept the",
+      "privacy_link": "Privacy Policy",
+      "privacy_required": "You must accept the privacy policy",
       "success_title": "Check your email!",
       "success_desc": "A confirmation email has been sent to your address. Click the link in the email to activate your account.",
       "error_email_not_verified": "You must verify your email before logging in."
