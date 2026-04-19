@@ -170,6 +170,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     <!-- Modal confirmation suppression -->
     <div class="modal-overlay" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
       <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-handle"></div>
         <div class="modal-header">
           <span class="material-icons-round modal-icon">delete_forever</span>
           <h3 class="modal-title">{{ 'profile.delete_modal_title' | translate }}</h3>
@@ -415,6 +416,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
       justify-content: center;
       z-index: 1000;
       padding: 20px;
+
+      @media (max-width: 600px) {
+        align-items: flex-end;
+        padding: 0;
+      }
     }
 
     .modal {
@@ -424,6 +430,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
       padding: 28px;
       width: 100%;
       max-width: 440px;
+
+      @media (max-width: 600px) {
+        border-radius: 20px 20px 0 0;
+        padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+        max-width: 100%;
+        border-bottom: none;
+      }
     }
 
     .modal-header {
@@ -433,6 +446,19 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
       gap: 12px;
       margin-bottom: 12px;
       padding: 0;
+    }
+
+    .modal-handle {
+      display: none;
+      width: 40px;
+      height: 4px;
+      background: var(--border-light);
+      border-radius: 2px;
+      margin: 0 auto 16px;
+
+      @media (max-width: 600px) {
+        display: block;
+      }
     }
 
     .modal-icon {
@@ -459,6 +485,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
       margin-top: 20px;
 
       .btn { width: auto; flex: 1; }
+
+      @media (max-width: 600px) {
+        flex-direction: column-reverse;
+        gap: 10px;
+
+        .btn { width: 100%; flex: none; }
+      }
     }
 
     .spin {
