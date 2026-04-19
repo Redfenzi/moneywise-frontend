@@ -5,6 +5,8 @@ import { Capacitor } from '@capacitor/core';
 import { App } from '@capacitor/app';
 import { AuthService } from './core/services/auth.service';
 import { ApiService } from './core/services/api.service';
+import { LanguageService } from './core/services/language.service';
+import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +18,10 @@ export class AppComponent implements OnInit, OnDestroy {
   private location = inject(Location);
   private authService = inject(AuthService);
   private apiService = inject(ApiService);
+  // Injectés ici pour garantir leur initialisation dès le démarrage de l'app,
+  // quelle que soit la route d'entrée (ex: lien email → /auth/verify-email)
+  private languageService = inject(LanguageService);
+  private themeService = inject(ThemeService);
   private backButtonListener: any;
 
   ngOnInit() {
