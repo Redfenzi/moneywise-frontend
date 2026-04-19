@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { LanguageService } from '../../../core/services/language.service';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-verify-email',
@@ -17,6 +19,20 @@ import { environment } from '../../../../environments/environment';
             <span class="material-icons-round">account_balance_wallet</span>
           </div>
           <span class="logo-text">MoneyWise</span>
+        </div>
+
+        <div class="lang-switcher-auth">
+          <button class="lang-btn" [class.active]="lang.currentLang() === 'fr'" (click)="lang.setLanguage('fr')">
+            🇫🇷 FR
+          </button>
+          <span class="lang-sep">|</span>
+          <button class="lang-btn" [class.active]="lang.currentLang() === 'en'" (click)="lang.setLanguage('en')">
+            🇬🇧 EN
+          </button>
+          <span class="lang-sep">|</span>
+          <button class="lang-btn theme-toggle-btn" (click)="theme.toggle()" [title]="theme.isDark() ? ('nav.theme_light' | translate) : ('nav.theme_dark' | translate)">
+            <span class="material-icons-round" style="font-size:16px; vertical-align:middle;">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+          </button>
         </div>
 
         <!-- Chargement -->
@@ -58,6 +74,19 @@ import { environment } from '../../../../environments/environment';
       text-align: center;
       max-width: 440px;
     }
+    .lang-switcher-auth {
+      display: flex; align-items: center; gap: 4px;
+      justify-content: center; margin-bottom: 24px;
+    }
+    .lang-btn {
+      background: none; border: none;
+      color: var(--text-secondary); font-size: 0.8rem; font-weight: 500;
+      cursor: pointer; padding: 2px 6px; border-radius: 6px;
+      transition: var(--transition); font-family: 'Inter', sans-serif;
+      &:hover { color: var(--text-primary); }
+      &.active { color: var(--primary-light); font-weight: 700; }
+    }
+    .lang-sep { color: var(--border); }
     .status-block {
       display: flex;
       flex-direction: column;
@@ -96,6 +125,8 @@ import { environment } from '../../../../environments/environment';
 export class VerifyEmailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private http = inject(HttpClient);
+  lang = inject(LanguageService);
+  theme = inject(ThemeService);
 
   status = signal<'loading' | 'success' | 'error'>('loading');
   errorMessage = signal('');

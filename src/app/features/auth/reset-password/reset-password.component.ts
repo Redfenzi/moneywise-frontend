@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../../core/services/api.service';
 import { LanguageService } from '../../../core/services/language.service';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -28,6 +29,10 @@ import { LanguageService } from '../../../core/services/language.service';
           <span class="lang-sep">|</span>
           <button class="lang-btn" [class.active]="lang.currentLang() === 'en'" (click)="lang.setLanguage('en')">
             🇬🇧 EN
+          </button>
+          <span class="lang-sep">|</span>
+          <button class="lang-btn theme-toggle-btn" (click)="theme.toggle()" [title]="theme.isDark() ? ('nav.theme_light' | translate) : ('nav.theme_dark' | translate)">
+            <span class="material-icons-round" style="font-size:16px; vertical-align:middle;">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
           </button>
         </div>
 
@@ -228,6 +233,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   private browserKey = '';
 
   lang = inject(LanguageService);
+  theme = inject(ThemeService);
   private api = inject(ApiService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
