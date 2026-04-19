@@ -41,7 +41,18 @@ import { LanguageService } from '../../../core/services/language.service';
           {{ error() }}
         </div>
 
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Écran de succès : email de confirmation envoyé -->
+        <div *ngIf="registered()" class="success-card">
+          <span class="material-icons-round success-icon">mark_email_unread</span>
+          <h3>{{ 'auth.register.success_title' | translate }}</h3>
+          <p>{{ 'auth.register.success_desc' | translate }}</p>
+          <a routerLink="/auth/login" class="btn btn-primary btn-full" style="margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <span class="material-icons-round">login</span>
+            {{ 'auth.register.login' | translate }}
+          </a>
+        </div>
+
+        <form *ngIf="!registered()" [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">{{ 'auth.register.first_name' | translate }}</label>
@@ -162,8 +173,18 @@ import { LanguageService } from '../../../core/services/language.service';
       &.active { color: var(--primary-light); font-weight: 700; }
     }
     .lang-sep { color: var(--border); font-size: 0.75rem; }
-    .password-toggle {
-      position: absolute;
+    .success-card {
+      text-align: center;
+      padding: 32px 16px;
+      .success-icon {
+        font-size: 56px;
+        color: var(--primary-light);
+        margin-bottom: 16px;
+      }
+      h3 { font-size: 1.3rem; margin-bottom: 12px; }
+      p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+    }
+    .password-toggle {      position: absolute;
       right: 12px;
       top: 50%;
       transform: translateY(-50%);
@@ -183,6 +204,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   loading = signal(false);
   error = signal('');
   showPassword = signal(false);
+  registered = signal(false);
 
   lang = inject(LanguageService);
   private translate = inject(TranslateService);
@@ -215,7 +237,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.error.set('');
 
     this.auth.register(this.form.value).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
+      next: () => {
+        this.loading.set(false);
+        this.registered.set(true);
+      },
       error: (err: { error?: { error?: string } }) => {
         this.loading.set(false);
         this.error.set(err.error?.error || this.translate.instant('auth.register.error_creation'));

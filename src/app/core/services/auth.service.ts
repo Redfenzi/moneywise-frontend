@@ -21,9 +21,7 @@ export class AuthService {
   }
 
   register(request: RegisterRequest) {
-    return this.http.post<AuthResponse>(`${this.API}/register`, request).pipe(
-      tap(res => this.saveSession(res))
-    );
+    return this.http.post<{message: string}>(`${this.API}/register`, request);
   }
 
   logout() {

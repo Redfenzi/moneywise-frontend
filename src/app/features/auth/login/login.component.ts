@@ -532,9 +532,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.auth.login(this.form.value).subscribe({
       next: () => this.router.navigate(['/dashboard']),
-      error: (err: { error?: { error?: string } }) => {
+      error: (err: { status?: number; error?: { error?: string } }) => {
         this.loading.set(false);
-        this.error.set(err.error?.error || this.translate.instant('auth.login.error_invalid'));
+        if (err.status === 403 && err.error?.error === 'EMAIL_NOT_VERIFIED') {
+          this.error.set(this.translate.instant('auth.register.error_email_not_verified'));
+        } else {
+          this.error.set(err.error?.error || this.translate.instant('auth.login.error_invalid'));
+        }
       }
     });
   }

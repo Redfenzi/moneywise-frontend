@@ -92,7 +92,19 @@
       "loading": "Creating...",
       "already_account": "Already have an account?",
       "login": "Sign in",
-      "error_creation": "Error creating account"
+      "error_creation": "Error creating account",
+      "success_title": "Check your email!",
+      "success_desc": "A confirmation email has been sent to your address. Click the link in the email to activate your account.",
+      "error_email_not_verified": "You must verify your email before logging in."
+    },
+    "verify_email": {
+      "loading": "Verifying...",
+      "success_title": "Email confirmed!",
+      "success_desc": "Your email address has been verified. You can now sign in.",
+      "error_title": "Invalid link",
+      "error_desc": "This verification link is invalid or has expired.",
+      "go_login": "Sign in",
+      "go_register": "Create a new account"
     }
   },
   "dashboard": {

@@ -92,7 +92,19 @@
       "loading": "Création...",
       "already_account": "Déjà un compte ?",
       "login": "Se connecter",
-      "error_creation": "Erreur lors de la création du compte"
+      "error_creation": "Erreur lors de la création du compte",
+      "success_title": "Vérifiez votre email !",
+      "success_desc": "Un email de confirmation a été envoyé à votre adresse. Cliquez sur le lien dans l'email pour activer votre compte.",
+      "error_email_not_verified": "Vous devez vérifier votre email avant de vous connecter."
+    },
+    "verify_email": {
+      "loading": "Vérification en cours...",
+      "success_title": "Email confirmé !",
+      "success_desc": "Votre adresse email a été vérifiée avec succès. Vous pouvez maintenant vous connecter.",
+      "error_title": "Lien invalide",
+      "error_desc": "Ce lien de vérification est invalide ou a expiré.",
+      "go_login": "Se connecter",
+      "go_register": "Créer un nouveau compte"
     }
   },
   "dashboard": {
