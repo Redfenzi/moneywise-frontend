@@ -105,6 +105,7 @@
       "error_title": "Invalid link",
       "error_desc": "This verification link is invalid or has expired.",
       "go_login": "Sign in",
+      "app_hint": "If you opened this link from the Android app, close this tab and return to MoneyWise to sign in.",
       "go_register": "Create a new account"
     }
   },

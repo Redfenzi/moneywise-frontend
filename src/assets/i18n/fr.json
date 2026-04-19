@@ -105,6 +105,7 @@
       "error_title": "Lien invalide",
       "error_desc": "Ce lien de vérification est invalide ou a expiré.",
       "go_login": "Se connecter",
+      "app_hint": "Si vous avez ouvert ce lien depuis l'application Android, fermez cet onglet et revenez à MoneyWise pour vous connecter.",
       "go_register": "Créer un nouveau compte"
     }
   },

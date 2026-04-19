@@ -30,7 +30,11 @@ import { environment } from '../../../../environments/environment';
           <span class="material-icons-round status-icon success">check_circle</span>
           <h2>{{ 'auth.verify_email.success_title' | translate }}</h2>
           <p>{{ 'auth.verify_email.success_desc' | translate }}</p>
-          <a routerLink="/auth/login" class="btn btn-primary btn-full" style="margin-top: 24px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <div class="mobile-hint">
+            <span class="material-icons-round">phone_android</span>
+            <p>{{ 'auth.verify_email.app_hint' | translate }}</p>
+          </div>
+          <a routerLink="/auth/login" class="btn btn-primary btn-full" style="margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;">
             <span class="material-icons-round">login</span>
             {{ 'auth.verify_email.go_login' | translate }}
           </a>
@@ -72,6 +76,20 @@ import { environment } from '../../../../environments/environment';
       width: 48px;
       height: 48px;
       border-width: 4px;
+    }
+    .mobile-hint {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(108,99,255,0.08);
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: left;
+      width: 100%;
+      box-sizing: border-box;
+      .material-icons-round { color: var(--primary-light); font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+      p { font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.5; }
     }
   `]
 })
