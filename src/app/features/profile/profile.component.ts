@@ -113,12 +113,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
           <div class="form-group">
             <label class="form-label">{{ 'profile.new_password' | translate }}</label>
             <input class="form-input" type="password" name="newPassword"
-                   [(ngModel)]="passwords.newPassword" required minlength="6"
+                   [(ngModel)]="passwords.newPassword" required minlength="12"
+                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{12,}$"
                    #newPasswordInput="ngModel"
                    [class.error]="newPasswordInput.invalid && newPasswordInput.touched" />
             <div class="form-error" *ngIf="newPasswordInput.invalid && newPasswordInput.touched">
               <span *ngIf="newPasswordInput.errors?.['required']">{{ 'validation.required' | translate }}</span>
-              <span *ngIf="newPasswordInput.errors?.['minlength']">{{ 'validation.min_length_6' | translate }}</span>
+              <span *ngIf="newPasswordInput.errors?.['minlength'] || newPasswordInput.errors?.['pattern']">{{ 'validation.password_strong' | translate }}</span>
             </div>
           </div>
 

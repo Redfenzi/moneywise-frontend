@@ -1,11 +1,17 @@
 import { Component, signal, inject, OnInit, OnDestroy } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { LanguageService } from '../../../core/services/language.service';
+
+const STRONG_PASSWORD_RE = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{12,}$/;
+function strongPasswordValidator(c: AbstractControl): ValidationErrors | null {
+  const v = c.value || '';
+  return v && !STRONG_PASSWORD_RE.test(v) ? { weakPassword: true } : null;
+}
 
 @Component({
   selector: 'app-register',
@@ -131,7 +137,7 @@ import { LanguageService } from '../../../core/services/language.service';
             </div>
             <div class="form-error" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
               <span *ngIf="form.get('password')?.errors?.['required']">{{ 'validation.required' | translate }}</span>
-              <span *ngIf="form.get('password')?.errors?.['minlength']">{{ 'validation.min_length_6' | translate }}</span>
+              <span *ngIf="form.get('password')?.errors?.['weakPassword']">{{ 'validation.password_strong' | translate }}</span>
             </div>
           </div>
 
@@ -474,7 +480,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       email: ['', [Validators.required, Validators.email]],
       userType: ['INDIVIDUAL', Validators.required],
       currency: ['EUR', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, strongPasswordValidator]],
       acceptPrivacy: [false, Validators.requiredTrue]
     });
   }

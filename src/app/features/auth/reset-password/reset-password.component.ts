@@ -1,12 +1,18 @@
 import { Component, signal, inject, OnInit, OnDestroy } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../../core/services/api.service';
 import { LanguageService } from '../../../core/services/language.service';
 import { ThemeService } from '../../../core/services/theme.service';
+
+const STRONG_PASSWORD_RE = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{12,}$/;
+function strongPasswordValidator(c: AbstractControl): ValidationErrors | null {
+  const v = c.value || '';
+  return v && !STRONG_PASSWORD_RE.test(v) ? { weakPassword: true } : null;
+}
 
 @Component({
   selector: 'app-reset-password',
@@ -241,7 +247,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 
   constructor() {
     this.form = this.fb.group({
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [Validators.required, strongPasswordValidator]],
       confirmPassword: ['', Validators.required]
     }, { validators: this.passwordMatchValidator });
   }
