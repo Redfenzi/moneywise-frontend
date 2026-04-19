@@ -228,7 +228,7 @@ import { ThemeService } from '../../../core/services/theme.service';
       display: flex;
       gap: 12px;
       margin-top: 20px;
-      @media (max-width: 400px) {
+      @media (max-width: 480px) {
         flex-direction: column;
       }
     }
