@@ -25,11 +25,36 @@ import { RouterLink } from '@angular/router';
             <button class="btn btn-ghost btn-sm" (click)="prevMonth()">
               <span class="material-icons-round">chevron_left</span>
             </button>
-            <span class="month-label">{{ monthLabel }}</span>
+            <div class="month-label-wrapper">
+              <button class="month-label-btn" (click)="togglePicker()">
+                <span class="month-label">{{ monthLabel }}</span>
+                <span class="material-icons-round picker-caret">{{ showPicker() ? 'expand_less' : 'expand_more' }}</span>
+              </button>
+              <div class="month-picker" *ngIf="showPicker()">
+                <div class="picker-year-row">
+                  <button class="picker-nav" (click)="pickerYear = pickerYear - 1; $event.stopPropagation()">
+                    <span class="material-icons-round">chevron_left</span>
+                  </button>
+                  <span class="picker-year-label">{{ pickerYear }}</span>
+                  <button class="picker-nav" (click)="pickerYear = pickerYear + 1; $event.stopPropagation()">
+                    <span class="material-icons-round">chevron_right</span>
+                  </button>
+                </div>
+                <div class="picker-months">
+                  <button *ngFor="let m of months; let i = index"
+                    class="picker-month-btn"
+                    [class.active]="(i + 1) === currentMonth && pickerYear === currentYear"
+                    (click)="selectMonth(i + 1, pickerYear)">
+                    {{ m }}
+                  </button>
+                </div>
+              </div>
+            </div>
             <button class="btn btn-ghost btn-sm" (click)="nextMonth()">
               <span class="material-icons-round">chevron_right</span>
             </button>
           </div>
+          <div class="picker-backdrop" *ngIf="showPicker()" (click)="showPicker.set(false)"></div>
         </div>
       </div>
 
@@ -248,14 +273,90 @@ import { RouterLink } from '@angular/router';
       border: 1px solid var(--border);
       border-radius: var(--border-radius-sm);
       padding: 4px;
+      position: relative;
+    }
+    .month-label-wrapper { position: relative; }
+    .month-label-btn {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: var(--transition);
+      &:hover { background: var(--bg-secondary); }
     }
     .month-label {
       font-weight: 600;
       font-size: 0.9375rem;
-      min-width: 140px;
+      min-width: 130px;
       text-align: center;
       color: var(--text-primary);
       text-transform: capitalize;
+    }
+    .picker-caret { font-size: 18px; color: var(--text-muted); }
+    .month-picker {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+      padding: 16px;
+      z-index: 1000;
+      min-width: 232px;
+    }
+    .picker-year-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .picker-year-label {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+    .picker-nav {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+      padding: 4px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      transition: var(--transition);
+      &:hover { background: var(--bg-secondary); color: var(--text-primary); }
+    }
+    .picker-months {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .picker-month-btn {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 4px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+      font-family: inherit;
+      &:hover { background: rgba(108,99,255,0.1); color: var(--primary-light); border-color: var(--primary-light); }
+      &.active { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 700; }
+    }
+    .picker-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
     }
 
     .budget-items { display: flex; flex-direction: column; gap: 16px; }
@@ -415,9 +516,11 @@ export class DashboardComponent implements OnInit {
   summary = signal<MonthlySummary | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showPicker = signal(false);
 
   currentMonth = new Date().getMonth() + 1;
   currentYear = new Date().getFullYear();
+  pickerYear = new Date().getFullYear();
 
   private langService = inject(LanguageService);
 
@@ -437,6 +540,28 @@ export class DashboardComponent implements OnInit {
     const date = new Date(this.currentYear, this.currentMonth - 1, 1);
     const raw = date.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
     return raw.replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  get months(): string[] {
+    const locale = this.langService.currentLang();
+    return Array.from({ length: 12 }, (_, i) =>
+      new Date(2000, i, 1)
+        .toLocaleDateString(locale, { month: 'short' })
+        .replace('.', '')
+        .replace(/\b\w/g, c => c.toUpperCase())
+    );
+  }
+
+  togglePicker() {
+    this.pickerYear = this.currentYear;
+    this.showPicker.set(!this.showPicker());
+  }
+
+  selectMonth(month: number, year: number) {
+    this.currentMonth = month;
+    this.currentYear = year;
+    this.showPicker.set(false);
+    this.loadSummary();
   }
 
   prevMonth() {
