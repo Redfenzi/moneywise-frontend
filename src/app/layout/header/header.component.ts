@@ -67,7 +67,7 @@ import { TranslateModule } from '@ngx-translate/core';
       justify-content: space-between;
       padding: 0 32px;
       position: sticky;
-      top: 0;
+      top: env(safe-area-inset-top, 0px);
       z-index: 100;
     }
 
