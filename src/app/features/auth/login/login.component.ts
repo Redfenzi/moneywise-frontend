@@ -198,10 +198,22 @@ import { ThemeService } from '../../../core/services/theme.service';
         </div>
       </div>
 
+      <p class="redtech-footer">
+        Développé par <strong>RedTech Solutions</strong>
+      </p>
+
       </div>
     </div>
   `,
   styles: [`
+    .redtech-footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 16px;
+      opacity: 0.7;
+      strong { font-weight: 600; color: var(--text-secondary); }
+    }
     .resend-hint-block {
       background: rgba(108,99,255,0.06);
       border: 1px solid rgba(108,99,255,0.2);
