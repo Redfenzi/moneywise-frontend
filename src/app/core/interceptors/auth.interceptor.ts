@@ -6,8 +6,16 @@ import { AuthService } from '../services/auth.service';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const token = auth.getToken();
+  const isPublicAuthEndpoint = req.url.includes('/auth/');
 
-  // Si le token existe mais est expiré, déconnecter immédiatement
+  // Pour les endpoints publics (/auth/*), on envoie sans token
+  if (isPublicAuthEndpoint) {
+    return next(req).pipe(
+      catchError((error: HttpErrorResponse) => throwError(() => error))
+    );
+  }
+
+  // Pour les endpoints protégés : vérifier l'expiration avant d'envoyer
   if (token && !auth.isAuthenticated()) {
     auth.logout();
     return throwError(() => new Error('Token expiré'));
