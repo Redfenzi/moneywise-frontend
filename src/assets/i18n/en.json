@@ -55,7 +55,7 @@
       "submit": "Send reset link",
       "loading": "Sending...",
       "success_title": "Email sent!",
-      "success_desc": "If your email is registered, you will receive a link valid for 2 minutes. You can open it from any browser or device.",
+      "success_desc": "If your email is registered, you will receive a link valid for 2 minutes. You can open it from any browser or device. 📩 If you don't see it, check your spam folder.",
       "back_login": "Back to login"
     },
     "reset": {
@@ -101,7 +101,7 @@
       "privacy_link": "Privacy Policy",
       "privacy_required": "You must accept the privacy policy",
       "success_title": "Check your email!",
-      "success_desc": "A confirmation email has been sent to your address. Click the link in the email to activate your account. ⚠️ This link is valid for 2 minutes.",
+      "success_desc": "A confirmation email has been sent to your address. Click the link in the email to activate your account. ⚠️ This link is valid for 2 minutes. 📩 If you don't see it, check your spam folder.",
       "error_email_not_verified": "You must verify your email before logging in."
     },
     "verify_email": {

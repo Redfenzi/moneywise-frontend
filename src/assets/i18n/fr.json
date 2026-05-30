@@ -55,7 +55,7 @@
       "submit": "Envoyer le lien",
       "loading": "Envoi en cours...",
       "success_title": "Email envoyé !",
-      "success_desc": "Si votre email est enregistré, vous recevrez un lien valable 2 minutes. Vous pouvez l'ouvrir depuis n'importe quel navigateur ou appareil.",
+      "success_desc": "Si votre email est enregistré, vous recevrez un lien valable 2 minutes. Vous pouvez l'ouvrir depuis n'importe quel navigateur ou appareil. 📩 Si vous ne le voyez pas, vérifiez vos spams.",
       "back_login": "Retour à la connexion"
     },
     "reset": {
@@ -101,7 +101,7 @@
       "privacy_link": "Politique de confidentialité",
       "privacy_required": "Vous devez accepter la politique de confidentialité",
       "success_title": "Vérifiez votre email !",
-      "success_desc": "Un email de confirmation a été envoyé à votre adresse. Cliquez sur le lien dans l'email pour activer votre compte. ⚠️ Ce lien est valable 2 minutes.",
+      "success_desc": "Un email de confirmation a été envoyé à votre adresse. Cliquez sur le lien dans l'email pour activer votre compte. ⚠️ Ce lien est valable 2 minutes. 📩 Si vous ne le voyez pas, vérifiez vos spams.",
       "error_email_not_verified": "Vous devez vérifier votre email avant de vous connecter."
     },
     "verify_email": {
